@@ -20,7 +20,7 @@ import {
   NestedObject,
   Shade,
   TailwindCustomColors,
-} from "../types/ui-types";
+} from "../types/ui-types"
 import colors from "tailwindcss/colors"
 import { twColors } from "../constants/tailwind-colors"
 // import twConfig from "../../../../../tailwind.config"
@@ -39,13 +39,13 @@ import {
   makUiVariants,
   mediaQueries,
   tailwindToCssModifierObject,
-} from "../constants/ui-constants";
+} from "../constants/ui-constants"
 import {
   ClassObject,
   MakUiRootComponentConfig,
   ObjectToClassNameObjectProp,
 } from "../types/component-types"
-import { useMakUi } from "../useMakUi"
+import useMakUi from "../context/useMakUi"
 
 export const mergeWithFallback = (
   primary: Record<string, any>,
@@ -900,7 +900,7 @@ export const splitKeyAtChar = (obj: GenericObject, char: string) => {
 }
 
 export const splitStringAtCapital = (string: string) => {
-  return string.split(/(?=[A-Z])/);
+  return string.split(/(?=[A-Z])/)
 }
 
 const getNestedClassNameObjects = ({

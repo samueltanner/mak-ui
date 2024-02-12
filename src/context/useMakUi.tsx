@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react"
-import { paletteFactory } from "../src/factories/paletteFactory"
+import { paletteFactory } from "../factories/paletteFactory"
 import { ThemeProvider, useTheme } from "next-themes"
-import { constructTailwindObject } from "../src/functions/helpers"
+import { constructTailwindObject } from "../functions/helpers"
 
 import {
   GenericObject,
@@ -15,17 +15,17 @@ import {
   MakUiVerbosePalette,
   MakUiVerboseTheme,
   ShadeStep,
-} from "../src/types/ui-types"
+} from "../types/ui-types"
 import {
   makUiDefaultThemeShades,
   makUiThemes,
   defaultComponentConfig,
-} from "../src/constants/ui-constants"
+} from "../constants/ui-constants"
 import {
   MakUiComponentConfig,
   MakUiRootComponentConfig,
-} from "../src/types/component-types"
-import { deepMerge, isEmptyObject } from "../src/functions/helpers"
+} from "../types/component-types"
+import { deepMerge, isEmptyObject } from "../functions/helpers"
 import styled from "@emotion/styled"
 
 type PaletteGeneratorProps = {
@@ -321,10 +321,12 @@ interface MakUiContext {
   }) => Record<number, string>
 }
 
-export const useMakUi = () => {
+const useMakUi = () => {
   const context = React.useContext(MakUiContext)
   if (context === undefined) {
     throw new Error("useMakUi must be used within a MakUiProvider")
   }
   return context
 }
+
+export default useMakUi
