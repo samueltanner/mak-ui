@@ -1,8 +1,8 @@
-import { MotionProps, motion } from "framer-motion";
+import { MotionProps, motion } from "framer-motion"
 import styled from "@emotion/styled"
-import { forwardRef, useMemo } from "react"
-import { GenericObject } from "../types/ui-types";
-import { ComponentWrapperResponse } from "../types/component-types"
+import React, { ComponentType, Ref, forwardRef, useMemo } from "react"
+import { GenericObject, ComponentWrapperResponse } from "../types/index"
+
 import { formatJsonToHtmlString } from "../functions/helpers"
 
 const BaseStyledComponent = styled.div<any>(({ styleObject }) => ({
@@ -19,7 +19,7 @@ const StyledMotionComponent = forwardRef(
     }: {
       as: string
       styleObject: GenericObject
-      ref?: React.Ref<any>
+      ref?: Ref<any>
       motionProps?: MotionProps
       className?: string
       makClassName?: string
@@ -50,7 +50,7 @@ const StyledMotionComponent = forwardRef(
     } = props
     const MotionComponent = motion[
       Component as keyof typeof motion
-    ] as React.ComponentType<any>
+    ] as ComponentType<any>
 
     const memoizedMotionProps = useMemo(() => motionProps, [motionProps])
 

@@ -1,9 +1,6 @@
-// MakComponent.tsx
-/** @jsxImportSource @emotion/react */
-
-import { forwardRef, ReactNode, useMemo, memo, useEffect } from "react"
-import useMakUi from "../context/useMakUi"
-import { MakUiElementProps } from "../types/mak-prop-types"
+import React, { forwardRef, ReactNode, useMemo, memo, useEffect } from "react"
+import { useMakUi } from "../context/useMakUi"
+import { MakUiElementProps } from "../types/index"
 import { componentWrapperLogic } from "../functions/componentWrapperLogic"
 import StyledComponent from "./StyledComponent"
 import { isEmptyObject } from "@/functions/helpers"

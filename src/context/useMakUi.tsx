@@ -1,10 +1,21 @@
-import React, { createContext, useEffect, useMemo, useState } from "react"
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { paletteFactory } from "../factories/paletteFactory"
-import { ThemeProvider, useTheme } from "next-themes"
-import { constructTailwindObject } from "../functions/helpers"
+// import { ThemeProvider, useTheme } from "next-themes"
+import {
+  constructTailwindObject,
+  deepMerge,
+  isEmptyObject,
+} from "../functions/helpers"
 
 import {
-  GenericObject,
   MakUiFlexiblePaletteInput,
   MakUiInteractionStateKey,
   MakUiSimplePalette,
@@ -15,17 +26,16 @@ import {
   MakUiVerbosePalette,
   MakUiVerboseTheme,
   ShadeStep,
-} from "../types/ui-types"
+  MakUiComponentConfig,
+  MakUiRootComponentConfig,
+  GenericObject,
+} from "../types/index"
 import {
   makUiDefaultThemeShades,
   makUiThemes,
   defaultComponentConfig,
 } from "../constants/ui-constants"
-import {
-  MakUiComponentConfig,
-  MakUiRootComponentConfig,
-} from "../types/component-types"
-import { deepMerge, isEmptyObject } from "../functions/helpers"
+
 import styled from "@emotion/styled"
 
 type PaletteGeneratorProps = {
@@ -43,7 +53,7 @@ type PaletteGeneratorProps = {
 }
 
 type MakUiProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
   palette?: MakUiFlexiblePaletteInput
   paletteOverride?: MakUiVerbosePalette
   componentConfig?: MakUiComponentConfig
@@ -64,13 +74,13 @@ const MakUiContext = createContext<MakUiContext | undefined>(undefined)
 
 export const MakUiProvider = (props: MakUiProviderProps) => {
   return (
-    <ThemeProvider
-      storageKey="mak-ui-theme"
-      enableSystem={true}
-      themes={makUiThemes}
-    >
-      <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
-    </ThemeProvider>
+    // <ThemeProvider
+    //   storageKey="mak-ui-theme"
+    //   enableSystem={true}
+    //   themes={makUiThemes}
+    // >
+    <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
+    // </ThemeProvider>
   )
 }
 
@@ -100,8 +110,9 @@ const MakUiProviderChild = ({
   paletteGenProps = defaultPaletteGenProps,
 }: MakUiProviderProps) => {
   const [styleSheet, setStyleSheet] = useState<GenericObject>({})
+  const [themeMode, setThemeMode] = useState<MakUiThemeKey>(defaultTheme)
 
-  const paletteInputRef = React.useRef<string>()
+  const paletteInputRef = useRef<string>()
   useEffect(() => {
     if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
       paletteInputRef.current = JSON.stringify(paletteInput)
@@ -109,7 +120,7 @@ const MakUiProviderChild = ({
     return
   }, [JSON.stringify(paletteInput)])
 
-  let { theme: themeMode, setTheme: setThemeMode } = useTheme()
+  // let { theme: themeMode, setTheme: setThemeMode } = useTheme()
 
   const mergedPaletteGenProps = deepMerge(
     defaultPaletteGenProps,
@@ -298,7 +309,7 @@ interface MakUiContext {
   componentConfig: MakUiComponentConfig
 
   theme: MakUiThemeKey
-  setTheme: (themeMode: string) => void
+  setTheme: (themeMode: MakUiThemeKey) => void
   formattingThemes: boolean
   isDark: boolean
   isLight: boolean
@@ -321,12 +332,10 @@ interface MakUiContext {
   }) => Record<number, string>
 }
 
-const useMakUi = () => {
-  const context = React.useContext(MakUiContext)
+export const useMakUi = () => {
+  const context = useContext(MakUiContext)
   if (context === undefined) {
     throw new Error("useMakUi must be used within a MakUiProvider")
   }
   return context
 }
-
-export default useMakUi

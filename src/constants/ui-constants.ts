@@ -1,8 +1,4 @@
 import {
-  MakUiComponentConfig,
-  MakUiRootComponentConfig,
-} from "../types/component-types"
-import {
   HtmlElementKey,
   MakUiCustomInteractionStateKey,
   MakUiDefaultColors,
@@ -18,7 +14,9 @@ import {
   MakUiVariantKey,
   Shade,
   TailwindUtilityClass,
-} from "../types/ui-types"
+  MakUiComponentConfig,
+  MakUiRootComponentConfig,
+} from "../types/index"
 
 export const tailwindVariants: TailwindUtilityClass[] = [
   "bg",

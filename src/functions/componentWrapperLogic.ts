@@ -1,4 +1,4 @@
-import useMakUi from "../context/useMakUi"
+import { useMakUi } from "../context/useMakUi"
 import {
   mergeDefaultConfig,
   parseClassNameToStyleObject,
@@ -10,8 +10,10 @@ import {
   VariantWithShade,
   VariantWithShadeAndOpacity,
   FalsyValue,
-} from "../types/component-types"
-import { MakUiThemeVariantKey, MakUiVariantKey } from "../types/ui-types"
+  MakUiThemeVariantKey,
+  MakUiVariantKey,
+} from "../types/index"
+
 import { withComputedProps } from "../functions/componentPropsFunction"
 
 export const componentWrapperLogic = ({

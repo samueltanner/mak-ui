@@ -6,13 +6,12 @@ import {
 } from "../functions/helpers"
 import {
   MakUiFlexiblePaletteInput,
-  MakUiInteractionStateKey,
   MakUiSimplePalette,
   MakUiThemeKey,
   MakUiThemeShades,
   MakUiVerbosePalette,
   ShadeStep,
-} from "../types/ui-types"
+} from "../types/index"
 import {
   makUiDefaultColors,
   makUiDefaultPalette,

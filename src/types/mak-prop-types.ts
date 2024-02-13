@@ -1,6 +1,6 @@
-import { TypeProps } from "./component-types"
-import { MotionProps } from "framer-motion"
+// import { TypeProps } from "./component-types"
+// import { MotionProps } from "framer-motion"
 
-export type MakUiElementProps = TypeProps & {
-  motion?: MotionProps
-}
+// export type MakUiElementProps = TypeProps & {
+//   motion?: MotionProps
+// }

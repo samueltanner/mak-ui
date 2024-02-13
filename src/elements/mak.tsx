@@ -1,11 +1,10 @@
 import { MakComponent } from "./MakComponent"
-import { MakUiElementProps } from "../types/mak-prop-types"
-import { forwardRef, useMemo } from "react"
+import { MakUiElementProps } from "../types/index"
+import React, { ComponentType, Ref, forwardRef, useMemo } from "react"
 
-type ExtendedHTMLElement<K extends keyof JSX.IntrinsicElements> =
-  React.ComponentType<
-    JSX.IntrinsicElements[K] & MakUiElementProps & { ref?: React.Ref<any> }
-  >
+type ExtendedHTMLElement<K extends keyof JSX.IntrinsicElements> = ComponentType<
+  JSX.IntrinsicElements[K] & MakUiElementProps & { ref?: Ref<any> }
+>
 
 type Mak = {
   [K in keyof JSX.IntrinsicElements]: ExtendedHTMLElement<K>

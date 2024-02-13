@@ -1,3 +1,5 @@
+// import fs from "fs"
+// import path from "path"
 import chroma from "chroma-js"
 import {
   DefaultColors,
@@ -20,15 +22,16 @@ import {
   NestedObject,
   Shade,
   TailwindCustomColors,
-} from "../types/ui-types"
-import colors from "tailwindcss/colors"
-import { twColors } from "../constants/tailwind-colors"
-// import twConfig from "../../../../../tailwind.config"
-import {
   MakUiThemeKey,
   MakUiVerboseThemeVariant,
   TWColorHelperResponse,
-} from "../types/ui-types"
+  ObjectToClassNameObjectProp,
+  ClassObject,
+  MakUiRootComponentConfig,
+} from "../types/index"
+import colors from "tailwindcss/colors"
+import { twColors } from "../constants/tailwind-colors"
+
 import {
   makUiDefaultColors,
   makUiDefaultStateShades,
@@ -40,12 +43,8 @@ import {
   mediaQueries,
   tailwindToCssModifierObject,
 } from "../constants/ui-constants"
-import {
-  ClassObject,
-  MakUiRootComponentConfig,
-  ObjectToClassNameObjectProp,
-} from "../types/component-types"
-import useMakUi from "../context/useMakUi"
+
+import { useMakUi } from "../context/useMakUi"
 
 export const mergeWithFallback = (
   primary: Record<string, any>,
@@ -343,7 +342,7 @@ export const getConstructedTheme = ({
       if (variant === "primary") {
         ;(acc as MakUiThemeVariantShades)[variant] = 0
       } else {
-        let value = shade - defaultShadesObj["primary"]
+        let value = (shade as Shade) - defaultShadesObj["primary"]
         const isNeg = value < 0 ? -1 : 1
         const absValue = Math.abs(value)
         value = Math.round(absValue / 100) * 100 * isNeg
@@ -803,9 +802,29 @@ export const getTwHex = ({
       if (defaultHex) return defaultHex
       return black
     } else {
-      const twConfig = {} as any
-      const tailwindCustomColors = twConfig?.theme?.extend
-        ?.colors as TailwindCustomColors
+      let twConfig = {} as any
+
+      // try {
+      //   const configPath = path.join(__dirname, "../user-config.json")
+      //   const tailwindConfigFile = JSON.parse(
+      //     fs.readFileSync(configPath, "utf8")
+      //   )
+
+      //   if (tailwindConfigFile.tailwindConfigPath) {
+      //     twConfig = require(path.resolve(
+      //       tailwindConfigFile.tailwindConfigPath
+      //     ))
+      //   } else {
+      //     console.log(
+      //       "No Tailwind configuration path specified. Using default configuration."
+      //     )
+      //   }
+      // } catch (error) {
+      //   console.error("Error reading user configuration:", error)
+      // }
+
+      const tailwindCustomColors =
+        twConfig?.theme?.extend?.colors || ({} as TailwindCustomColors)
 
       const [colorGroup, colorSubGroup] = rootColor.split("-")
       const customColorHex =

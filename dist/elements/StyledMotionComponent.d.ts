@@ -1,0 +1,21 @@
+import { MotionProps } from "framer-motion";
+import React from "react";
+import { GenericObject, ComponentWrapperResponse } from "../types/index";
+declare const StyledMotionComponent: React.ForwardRefExoticComponent<Omit<{
+    as: string;
+    styleObject: GenericObject;
+    ref?: React.Ref<any> | undefined;
+    motionProps?: MotionProps | undefined;
+    className?: string | undefined;
+    makClassName?: string | undefined;
+    componentTheme?: import("../types/index").MakUiVerboseThemeVariant | undefined;
+    componentBorder?: import("../types/index").MakUiVerboseVariant | undefined;
+    componentText?: import("../types/index").MakUiVerboseVariant | undefined;
+    componentColor?: import("../types/index").MakUiVerboseVariant | undefined;
+    fullComponentTheme?: import("../types/index").MakUiVerboseTheme | undefined;
+    componentThemeMode?: ComponentWrapperResponse["componentThemeMode"];
+    globalThemeMode?: import("../types/index").MakUiThemeKey | undefined;
+    globalTheme?: import("../types/index").MakUiVerboseTheme | undefined;
+    globalPalette?: import("../types/index").MakUiVerbosePalette | undefined;
+}, "ref"> & React.RefAttributes<unknown>>;
+export default StyledMotionComponent;

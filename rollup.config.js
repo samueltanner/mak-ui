@@ -1,13 +1,31 @@
 import typescript from "@rollup/plugin-typescript"
-import { terser } from "rollup-plugin-terser"
+import babel from "@rollup/plugin-babel"
 
 export default {
-  input: "src/index.ts", // Your main TypeScript file
+  input: "src/index.ts",
   output: {
     dir: "dist",
-    format: "cjs", // CommonJS format, you can also use 'esm' for ES Modules
+    format: "cjs",
     sourcemap: true,
   },
-  plugins: [typescript(), terser()],
-  external: ["react", "react-dom"],
+  plugins: [
+    typescript(),
+    babel({
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
+      babelHelpers: "bundled",
+      presets: ["@babel/preset-react"],
+    }),
+  ],
+  external: [
+    "react",
+    "react-dom",
+    "next-themes",
+    "@emotion/styled",
+    "chroma-js",
+    "tailwindcss",
+    "tailwindcss/colors",
+    "framer-motion",
+    "fs",
+    "path",
+  ],
 }

@@ -1,3 +1,3 @@
-export { default as useMakUi } from "./context/useMakUi"
-export * from "./types/component-types"
-export * from "./types/ui-types"
+export { useMakUi, MakUiProvider } from "./context/useMakUi"
+export * from "./types/index"
+export { default as mak } from "./elements/mak"

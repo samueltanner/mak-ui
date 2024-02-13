@@ -5,8 +5,10 @@ import {
   VariantWithShade,
   VariantWithShadeAndOpacity,
   WithComponentPropsResponse,
-} from "../types/component-types"
-import { MakUiThemeKey, MakUiThemeVariantKey, MakUiVariantKey } from "../types/ui-types";
+  MakUiThemeKey,
+  MakUiThemeVariantKey,
+  MakUiVariantKey,
+} from "../types/index"
 
 export const typeProps: TypeProps = {
   //theme
