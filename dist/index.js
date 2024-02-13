@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var React = require('react');
 var chroma = require('chroma-js');
 var colors = require('tailwindcss/colors');
+var nextThemes = require('next-themes');
 var styled = require('@emotion/styled');
 var framerMotion = require('framer-motion');
 
@@ -1885,16 +1886,11 @@ const paletteFactory = ({
 
 const MakUiContext = /*#__PURE__*/React.createContext(undefined);
 const MakUiProvider = props => {
-  return (
-    /*#__PURE__*/
-    // <ThemeProvider
-    //   storageKey="mak-ui-theme"
-    //   enableSystem={true}
-    //   themes={makUiThemes}
-    // >
-    React__default["default"].createElement(MakUiProviderChild, props, props.children)
-    // </ThemeProvider>
-  );
+  return /*#__PURE__*/React__default["default"].createElement(nextThemes.ThemeProvider, {
+    storageKey: "mak-ui-theme",
+    enableSystem: true,
+    themes: makUiThemes
+  }, /*#__PURE__*/React__default["default"].createElement(MakUiProviderChild, props, props.children));
 };
 const GlobalStyleSheetWrapper = styled__default["default"].div(({
   styleSheet
@@ -1920,15 +1916,10 @@ const MakUiProviderChild = ({
   paletteGenProps = defaultPaletteGenProps
 }) => {
   const [styleSheet, setStyleSheet] = React.useState({});
-  const [themeMode, setThemeMode] = React.useState(defaultTheme);
-  const paletteInputRef = React.useRef();
-  React.useEffect(() => {
-    if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
-      paletteInputRef.current = JSON.stringify(paletteInput);
-    }
-    return;
-  }, [JSON.stringify(paletteInput)]);
-  // let { theme: themeMode, setTheme: setThemeMode } = useTheme()
+  let {
+    theme: themeMode,
+    setTheme: setThemeMode
+  } = nextThemes.useTheme();
   const mergedPaletteGenProps = deepMerge(defaultPaletteGenProps, paletteGenProps);
   const {
     palette: paletteGenInput,
@@ -1944,6 +1935,13 @@ const MakUiProviderChild = ({
     altWhite
   } = mergedPaletteGenProps;
   paletteInput = paletteOverride ? paletteOverride : !isEmptyObject(paletteGenInput) ? paletteGenInput : paletteInput ? paletteInput : {};
+  const paletteInputRef = React.useRef();
+  React.useEffect(() => {
+    if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
+      paletteInputRef.current = JSON.stringify(paletteInput);
+    }
+    return;
+  }, [JSON.stringify(paletteInput)]);
   const stringifiedPalette = JSON.stringify(paletteInput);
   const darkModeInPalette = stringifiedPalette.includes("dark:");
   const customModeInPalette = stringifiedPalette.includes("custom:");

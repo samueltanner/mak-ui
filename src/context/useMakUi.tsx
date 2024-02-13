@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react"
 import { paletteFactory } from "../factories/paletteFactory"
-// import { ThemeProvider, useTheme } from "next-themes"
+import { ThemeProvider, useTheme } from "next-themes"
 import {
   constructTailwindObject,
   deepMerge,
@@ -74,13 +74,13 @@ const MakUiContext = createContext<MakUiContext | undefined>(undefined)
 
 export const MakUiProvider = (props: MakUiProviderProps) => {
   return (
-    // <ThemeProvider
-    //   storageKey="mak-ui-theme"
-    //   enableSystem={true}
-    //   themes={makUiThemes}
-    // >
-    <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
-    // </ThemeProvider>
+    <ThemeProvider
+      storageKey="mak-ui-theme"
+      enableSystem={true}
+      themes={makUiThemes}
+    >
+      <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
+    </ThemeProvider>
   )
 }
 
@@ -110,17 +110,8 @@ const MakUiProviderChild = ({
   paletteGenProps = defaultPaletteGenProps,
 }: MakUiProviderProps) => {
   const [styleSheet, setStyleSheet] = useState<GenericObject>({})
-  const [themeMode, setThemeMode] = useState<MakUiThemeKey>(defaultTheme)
 
-  const paletteInputRef = useRef<string>()
-  useEffect(() => {
-    if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
-      paletteInputRef.current = JSON.stringify(paletteInput)
-    }
-    return
-  }, [JSON.stringify(paletteInput)])
-
-  // let { theme: themeMode, setTheme: setThemeMode } = useTheme()
+  let { theme: themeMode, setTheme: setThemeMode } = useTheme()
 
   const mergedPaletteGenProps = deepMerge(
     defaultPaletteGenProps,
@@ -148,6 +139,15 @@ const MakUiProviderChild = ({
     : paletteInput
     ? paletteInput
     : {}
+
+  const paletteInputRef = useRef<string>()
+  useEffect(() => {
+    if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
+      paletteInputRef.current = JSON.stringify(paletteInput)
+    }
+    return
+  }, [JSON.stringify(paletteInput)])
+
   const stringifiedPalette = JSON.stringify(paletteInput)
 
   const darkModeInPalette = stringifiedPalette.includes("dark:")

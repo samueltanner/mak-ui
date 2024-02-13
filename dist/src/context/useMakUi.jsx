@@ -1,20 +1,14 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, } from "react";
 import { paletteFactory } from "../factories/paletteFactory";
-// import { ThemeProvider, useTheme } from "next-themes"
+import { ThemeProvider, useTheme } from "next-themes";
 import { constructTailwindObject, deepMerge, isEmptyObject, } from "../functions/helpers";
-import { makUiDefaultThemeShades, defaultComponentConfig, } from "../constants/ui-constants";
+import { makUiDefaultThemeShades, makUiThemes, defaultComponentConfig, } from "../constants/ui-constants";
 import styled from "@emotion/styled";
 const MakUiContext = createContext(undefined);
 export const MakUiProvider = (props) => {
-    return (
-    // <ThemeProvider
-    //   storageKey="mak-ui-theme"
-    //   enableSystem={true}
-    //   themes={makUiThemes}
-    // >
-    <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
-    // </ThemeProvider>
-    );
+    return (<ThemeProvider storageKey="mak-ui-theme" enableSystem={true} themes={makUiThemes}>
+      <MakUiProviderChild {...props}>{props.children}</MakUiProviderChild>
+    </ThemeProvider>);
 };
 const GlobalStyleSheetWrapper = styled.div(({ styleSheet }) => (Object.assign({}, styleSheet)));
 const defaultPaletteGenProps = {
@@ -31,15 +25,7 @@ const defaultPaletteGenProps = {
 };
 const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, palette: paletteInput, enableSystem = true, defaultTheme = "light", paletteGenProps = defaultPaletteGenProps, }) => {
     const [styleSheet, setStyleSheet] = useState({});
-    const [themeMode, setThemeMode] = useState(defaultTheme);
-    const paletteInputRef = useRef();
-    useEffect(() => {
-        if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
-            paletteInputRef.current = JSON.stringify(paletteInput);
-        }
-        return;
-    }, [JSON.stringify(paletteInput)]);
-    // let { theme: themeMode, setTheme: setThemeMode } = useTheme()
+    let { theme: themeMode, setTheme: setThemeMode } = useTheme();
     const mergedPaletteGenProps = deepMerge(defaultPaletteGenProps, paletteGenProps);
     const { palette: paletteGenInput, paletteOverride, themeShades, enableLightMode, enableDarkMode, enableCustomMode, shadeStep, includeBlackAndWhite, includeNearAbsolutes, altBlack, altWhite, } = mergedPaletteGenProps;
     paletteInput = paletteOverride
@@ -49,6 +35,13 @@ const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, p
             : paletteInput
                 ? paletteInput
                 : {};
+    const paletteInputRef = useRef();
+    useEffect(() => {
+        if (paletteInputRef.current !== JSON.stringify(paletteInput)) {
+            paletteInputRef.current = JSON.stringify(paletteInput);
+        }
+        return;
+    }, [JSON.stringify(paletteInput)]);
     const stringifiedPalette = JSON.stringify(paletteInput);
     const darkModeInPalette = stringifiedPalette.includes("dark:");
     const customModeInPalette = stringifiedPalette.includes("custom:");
