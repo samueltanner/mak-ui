@@ -1,5 +1,5 @@
 
-```npm i makui```
+```npm i @mak-stack/mak-ui```
 
 ```
 "use client"
