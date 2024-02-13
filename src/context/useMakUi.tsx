@@ -230,7 +230,7 @@ const MakUiProviderChild = ({
         simplePalette: paletteOverride as MakUiSimplePalette,
         verbosePalette: paletteOverride as MakUiVerbosePalette,
       }
-    console.log("generating palette")
+
     const { verbose, simple } =
       paletteFactory({
         paletteInput: paletteInput as MakUiFlexiblePaletteInput,
