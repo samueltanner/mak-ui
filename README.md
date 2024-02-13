@@ -1,5 +1,5 @@
 
-```npm i mak-ui```
+```npm i makui```
 
 ```
 "use client"
