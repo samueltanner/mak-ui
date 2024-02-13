@@ -9,6 +9,7 @@ import React, {
 } from "react"
 import { paletteFactory } from "../factories/paletteFactory"
 import { ThemeProvider, useTheme } from "next-themes"
+import { MakUiThemeProvider, useMakUiTheme } from "./useMakUIThemeContext"
 import {
   constructTailwindObject,
   deepMerge,

@@ -1,17 +1,27 @@
 {
   "name": "mak-ui",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "MakUi: A developer-first NextJs theming. Unlike other design-systems, MakUi allows for as much verbosity and customization as desired. It offers simplified palette generation, intuitive tailwindcss-esque styling with integration for all HTML tags <mak.[tag]>, built-in theming, and psuedo-classes, and flexibility to use with or without MakUi's component package.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c && tsc",
     "postinstall": "node postinstall.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "ui",
+    "react",
+    "tailwindcss",
+    "framer-motion",
+    "next-themes",
+    "emotion-styled",
+    "design-system",
+    "theming",
+    "next",
+    "nextjs"
+  ],
+  "author": "Sam 'Makali'i' Tanner <samuel.m.s.tanner@gmail.com> (https://www.samuel-tanner.com/)",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
@@ -33,7 +43,6 @@
     "@emotion/styled": "^11.11.0",
     "chroma-js": "^2.4.2",
     "framer-motion": "^11.0.3",
-    "next-themes": "^0.2.1",
-    "tailwindcss": "^3.4.1"
+    "next-themes": "^0.2.1"
   }
 }

@@ -1,5 +1,8 @@
 import { GenericObject, MakUiDefaultColors, MakUiDefaultStateColors, MakUiFlexiblePaletteInput, MakUiState, MakUiStateKey, MakUiStateShades, MakUiThemeShades, MakUiThemeShadesInput, MakUiVariantKey, MakUiVerbosePalette, MakUiVerboseShades, MakUiVerboseTheme, NestedObject, MakUiThemeKey, MakUiVerboseThemeVariant, TWColorHelperResponse, ObjectToClassNameObjectProp, ClassObject, MakUiRootComponentConfig } from "../types/index";
 import { useMakUi } from "../context/useMakUi";
+export declare const setLocalStorage: (key: string, value: any) => void;
+export declare const getLocalStorage: (key: string) => string | null | undefined;
+export declare const removeLocalStorage: (key: string) => void;
 export declare const mergeWithFallback: (primary: Record<string, any>, ...fallbacks: Array<Record<string, any> | undefined>) => Record<string, any>;
 export declare const nearestMultiple: (num: number, multiple: number, roundDir?: "up" | "down" | "nearest") => number;
 export declare const ensureNestedObject: <T>({ parent, keys, value, }: {

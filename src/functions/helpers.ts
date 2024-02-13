@@ -46,6 +46,24 @@ import {
 
 import { useMakUi } from "../context/useMakUi"
 
+export const setLocalStorage = (key: string, value: any) => {
+  if (typeof window === "undefined") return
+  if (typeof value === "object") {
+    value = JSON.stringify(value)
+  }
+  window.localStorage.setItem(key, value)
+}
+
+export const getLocalStorage = (key: string): string | null | undefined => {
+  if (typeof window === "undefined") return
+  return window.localStorage.getItem(key)
+}
+
+export const removeLocalStorage = (key: string) => {
+  if (typeof window === "undefined") return
+  window.localStorage.removeItem(key)
+}
+
 export const mergeWithFallback = (
   primary: Record<string, any>,
   ...fallbacks: Array<Record<string, any> | undefined>

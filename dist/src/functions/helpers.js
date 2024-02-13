@@ -15,6 +15,24 @@ import chroma from "chroma-js";
 import colors from "tailwindcss/colors";
 import { twColors } from "../constants/tailwind-colors";
 import { makUiDefaultColors, makUiDefaultStateShades, makUiDefaultThemeShades, makUiPalettes, makUiShadesSet, makUiThemesSet, makUiVariants, mediaQueries, tailwindToCssModifierObject, } from "../constants/ui-constants";
+export const setLocalStorage = (key, value) => {
+    if (typeof window === "undefined")
+        return;
+    if (typeof value === "object") {
+        value = JSON.stringify(value);
+    }
+    window.localStorage.setItem(key, value);
+};
+export const getLocalStorage = (key) => {
+    if (typeof window === "undefined")
+        return;
+    return window.localStorage.getItem(key);
+};
+export const removeLocalStorage = (key) => {
+    if (typeof window === "undefined")
+        return;
+    window.localStorage.removeItem(key);
+};
 export const mergeWithFallback = (primary, ...fallbacks) => {
     let result = {};
     fallbacks.forEach((fallback) => {

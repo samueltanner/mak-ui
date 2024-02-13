@@ -29,11 +29,6 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
 } & {
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
-} & React.SVGProps<SVGSVGElement>, "ref"> | Omit<import("../types/index").TypeProps & {
-    motion?: import("framer-motion").MotionProps | undefined;
-} & {
-    component: keyof JSX.IntrinsicElements;
-    children?: ReactNode;
 } & React.SVGProps<SVGElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
@@ -255,6 +250,11 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
 } & React.SVGProps<SVGStopElement>, "ref"> | Omit<import("../types/index").TypeProps & {
+    motion?: import("framer-motion").MotionProps | undefined;
+} & {
+    component: keyof JSX.IntrinsicElements;
+    children?: ReactNode;
+} & React.SVGProps<SVGSVGElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
     component: keyof JSX.IntrinsicElements;
