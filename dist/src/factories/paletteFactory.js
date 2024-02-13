@@ -1,10 +1,11 @@
 import { extractInitialPalette, getConstructedTheme, getConstructedShades, ensureNestedObject, } from "../functions/helpers";
 import { makUiDefaultColors, makUiDefaultPalette, makUiPalettes, makUiVariants, } from "../constants/ui-constants";
-export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades, shadeStep, includeBlackAndWhite, includeNearAbsolutes, altBlack, altWhite, }) => {
+export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades, shadeStep, includeBlackAndWhite, includeNearAbsolutes, altBlack, altWhite, tailwindConfig, }) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const initialVerbosePalette = extractInitialPalette({
         palette: paletteInput,
         enabledThemeModes,
+        tailwindConfig,
     });
     let finalVerbosePalette = {};
     let finalSimplePalette = {};
@@ -19,6 +20,7 @@ export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades,
                         defaultShades: defaultShades,
                         altBlack,
                         altWhite,
+                        tailwindConfig,
                     });
                     ensureNestedObject({
                         parent: finalVerbosePalette,
@@ -39,6 +41,7 @@ export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades,
                         defaultShades: defaultShades,
                         altBlack,
                         altWhite,
+                        tailwindConfig,
                     });
                     ensureNestedObject({
                         parent: finalVerbosePalette,
@@ -66,6 +69,7 @@ export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades,
                         includeNearAbsolutes,
                         altBlack,
                         altWhite,
+                        tailwindConfig,
                     });
                     ensureNestedObject({
                         parent: finalVerbosePalette,
@@ -130,6 +134,7 @@ export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades,
                         altBlack,
                         altWhite,
                         hexPosition: variant === "dark" ? 1000 : variant === "light" ? 0 : 500,
+                        tailwindConfig,
                     });
                     ensureNestedObject({
                         parent: finalVerbosePalette,

@@ -23,7 +23,7 @@ const defaultPaletteGenProps = {
     altBlack: "#000000",
     altWhite: "#ffffff",
 };
-const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, palette: paletteInput, enableSystem = true, defaultTheme = "light", paletteGenProps = defaultPaletteGenProps, }) => {
+const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, palette: paletteInput, enableSystem = true, defaultTheme = "light", paletteGenProps = defaultPaletteGenProps, tailwindConfig = {}, }) => {
     const [styleSheet, setStyleSheet] = useState({});
     let { theme: themeMode, setTheme: setThemeMode } = useTheme();
     const mergedPaletteGenProps = deepMerge(defaultPaletteGenProps, paletteGenProps);
@@ -105,7 +105,6 @@ const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, p
                 simplePalette: paletteOverride,
                 verbosePalette: paletteOverride,
             };
-        console.log("generating palette");
         const { verbose, simple } = paletteFactory({
             paletteInput: paletteInput,
             enabledThemeModes,
@@ -115,6 +114,7 @@ const MakUiProviderChild = ({ children, componentConfig: componentConfigInput, p
             includeNearAbsolutes: includeNearAbsolutes,
             altBlack: altBlack,
             altWhite: altWhite,
+            tailwindConfig,
         }) || {};
         return {
             simplePalette: simple,

@@ -28,6 +28,7 @@ export const paletteFactory = ({
   includeNearAbsolutes,
   altBlack,
   altWhite,
+  tailwindConfig,
 }: {
   paletteInput: MakUiFlexiblePaletteInput
   enabledThemeModes: MakUiThemeKey[]
@@ -37,10 +38,12 @@ export const paletteFactory = ({
   includeNearAbsolutes: boolean
   altBlack: string
   altWhite: string
+  tailwindConfig?: any
 }) => {
   const initialVerbosePalette = extractInitialPalette({
     palette: paletteInput,
     enabledThemeModes,
+    tailwindConfig,
   })
 
   let finalVerbosePalette = {} as MakUiVerbosePalette
@@ -57,6 +60,7 @@ export const paletteFactory = ({
             defaultShades: defaultShades,
             altBlack,
             altWhite,
+            tailwindConfig,
           })
 
           ensureNestedObject({
@@ -78,6 +82,7 @@ export const paletteFactory = ({
             defaultShades: defaultShades,
             altBlack,
             altWhite,
+            tailwindConfig,
           })
 
           ensureNestedObject({
@@ -109,6 +114,7 @@ export const paletteFactory = ({
             includeNearAbsolutes,
             altBlack,
             altWhite,
+            tailwindConfig,
           })
 
           ensureNestedObject({
@@ -181,6 +187,7 @@ export const paletteFactory = ({
             altWhite,
             hexPosition:
               variant === "dark" ? 1000 : variant === "light" ? 0 : 500,
+            tailwindConfig,
           })
 
           ensureNestedObject({

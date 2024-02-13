@@ -12,6 +12,7 @@ type PaletteGeneratorProps = {
     includeNearAbsolutes?: boolean;
     altBlack?: string;
     altWhite?: string;
+    tailwindConfig?: any;
 };
 type MakUiProviderProps = {
     children: ReactNode;
@@ -29,6 +30,7 @@ type MakUiProviderProps = {
     shadeStep?: ShadeStep;
     includeBlackAndWhite?: boolean;
     paletteGenProps?: PaletteGeneratorProps;
+    tailwindConfig?: any;
 };
 declare const MakUiContext: React.Context<MakUiContext | undefined>;
 export declare const MakUiProvider: (props: MakUiProviderProps) => React.JSX.Element;
@@ -47,10 +49,11 @@ interface MakUiContext {
     verboseTheme: MakUiVerboseTheme;
     styleSheet: GenericObject;
     setStyleSheet: (styleSheet: GenericObject) => void;
-    constructTailwindColorScale: ({ hex, step, includeNearAbsolutes, }: {
+    constructTailwindColorScale: ({ hex, step, includeNearAbsolutes, tailwindConfig, }: {
         hex: string;
         step?: number | undefined;
         includeNearAbsolutes?: boolean | undefined;
+        tailwindConfig: any;
     }) => Record<number, string>;
 }
 export declare const useMakUi: () => MakUiContext;

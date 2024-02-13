@@ -51,6 +51,7 @@ type PaletteGeneratorProps = {
   includeNearAbsolutes?: boolean
   altBlack?: string
   altWhite?: string
+  tailwindConfig?: any
 }
 
 type MakUiProviderProps = {
@@ -69,6 +70,7 @@ type MakUiProviderProps = {
   shadeStep?: ShadeStep
   includeBlackAndWhite?: boolean
   paletteGenProps?: PaletteGeneratorProps
+  tailwindConfig?: any
 }
 
 const MakUiContext = createContext<MakUiContext | undefined>(undefined)
@@ -109,6 +111,7 @@ const MakUiProviderChild = ({
   enableSystem = true,
   defaultTheme = "light",
   paletteGenProps = defaultPaletteGenProps,
+  tailwindConfig = {},
 }: MakUiProviderProps) => {
   const [styleSheet, setStyleSheet] = useState<GenericObject>({})
 
@@ -241,6 +244,7 @@ const MakUiProviderChild = ({
         includeNearAbsolutes: includeNearAbsolutes!,
         altBlack: altBlack!,
         altWhite: altWhite!,
+        tailwindConfig,
       }) || {}
 
     return {
@@ -326,10 +330,12 @@ interface MakUiContext {
     hex,
     step,
     includeNearAbsolutes,
+    tailwindConfig,
   }: {
     hex: string
     step?: number | undefined
     includeNearAbsolutes?: boolean | undefined
+    tailwindConfig: any
   }) => Record<number, string>
 }
 

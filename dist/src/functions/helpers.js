@@ -106,9 +106,9 @@ export const deepMerge = (...objects) => {
     }
     return result;
 };
-export const constructTailwindObject = ({ hex, step = 100, includeNearAbsolutes = true, hexPosition = 500, includeBlackAndWhite = true, blackHex = "#000000", whiteHex = "#FFFFFF", }) => {
+export const constructTailwindObject = ({ hex, step = 100, includeNearAbsolutes = true, hexPosition = 500, includeBlackAndWhite = true, blackHex = "#000000", whiteHex = "#FFFFFF", tailwindConfig, }) => {
     if (hex.includes("-") || hex.charAt(0) !== "#") {
-        hex = twColorHelper({ colorString: hex }).hex;
+        hex = twColorHelper({ colorString: hex, tailwindConfig }).hex;
     }
     if (hex.includes("#white") || hex === "white") {
         hex = "#ffffff";
@@ -190,34 +190,40 @@ const getNormalizedShadeNumber = (num) => {
         return 500;
     return num <= 50 ? 50 : num >= 950 ? 950 : Math.round(num / 100) * 100;
 };
-export const getConstructedTheme = ({ providedVariants, theme, defaultShades, altBlack, altWhite, }) => {
+export const getConstructedTheme = ({ providedVariants, theme, defaultShades, altBlack, altWhite, tailwindConfig, }) => {
     const { primary, secondary, tertiary, custom, light, dark } = providedVariants;
-    const blackHex = twColorHelper({ colorString: altBlack }).hex;
-    const whiteHex = twColorHelper({ colorString: altWhite }).hex;
+    const blackHex = twColorHelper({ colorString: altBlack, tailwindConfig }).hex;
+    const whiteHex = twColorHelper({ colorString: altWhite, tailwindConfig }).hex;
     const { shade: primaryShade, color: primaryColor, hex: primaryHex, } = twColorHelper({
         colorString: primary || makUiDefaultColors.primary,
         shade: includesShade(primary) ? undefined : defaultShades[theme].primary,
         useDefaults: false,
+        tailwindConfig,
     });
     const { shade: secondaryShade, color: secondaryColor, hex: secondaryHex, } = twColorHelper({
         colorString: secondary,
         useDefaults: false,
+        tailwindConfig,
     });
     const { shade: tertiaryShade, color: tertiaryColor, hex: tertiaryHex, } = twColorHelper({
         colorString: tertiary,
         useDefaults: false,
+        tailwindConfig,
     });
     const { shade: customShade, color: customColor, hex: customHex, } = twColorHelper({
         colorString: custom,
         useDefaults: false,
+        tailwindConfig,
     });
     const { shade: lightShade, color: lightColor, hex: lightHex, } = twColorHelper({
         colorString: light || "white",
         useDefaults: false,
+        tailwindConfig,
     });
     const { shade: darkShade, color: darkColor, hex: darkHex, } = twColorHelper({
         colorString: dark || "black",
         useDefaults: false,
+        tailwindConfig,
     });
     const defaultShadesObj = makUiDefaultThemeShades[theme];
     const shadeDiffs = Object.entries(defaultShadesObj).reduce((acc, [variant, shade]) => {
@@ -261,26 +267,32 @@ export const getConstructedTheme = ({ providedVariants, theme, defaultShades, al
             shade: includesShade(primary)
                 ? primaryShade
                 : defaultShades[theme].primary,
+            tailwindConfig,
         }),
         secondary: twColorHelper({
             colorString: secondaryColor || primaryColor,
             shade: resolvedShadesObject.secondary,
+            tailwindConfig,
         }),
         tertiary: twColorHelper({
             colorString: tertiaryColor || primaryColor,
             shade: resolvedShadesObject.tertiary,
+            tailwindConfig,
         }),
         custom: twColorHelper({
             colorString: customColor || primaryColor,
             shade: resolvedShadesObject.custom,
+            tailwindConfig,
         }),
         light: twColorHelper({
             colorString: lightColor,
             shade: resolvedShadesObject.light,
+            tailwindConfig,
         }),
         dark: twColorHelper({
             colorString: darkColor,
             shade: resolvedShadesObject.dark,
+            tailwindConfig,
         }),
         blackHex,
         whiteHex,
@@ -297,17 +309,20 @@ export const getConstructedTheme = ({ providedVariants, theme, defaultShades, al
     };
     return themeResponse;
 };
-export const getConstructedShades = ({ defaultColor, middleHex, providedShades, steps = 50, variant, includeBlackAndWhite = true, includeNearAbsolutes = true, altBlack = "#000000", altWhite = "#FFFFFF", hexPosition, }) => {
+export const getConstructedShades = ({ defaultColor, middleHex, providedShades, steps = 50, variant, includeBlackAndWhite = true, includeNearAbsolutes = true, altBlack = "#000000", altWhite = "#FFFFFF", hexPosition, tailwindConfig, }) => {
     var _a, _b;
     const finalShades = {};
     let shadeHex;
-    const blackHex = twColorHelper({ colorString: altBlack }).hex;
-    const whiteHex = twColorHelper({ colorString: altWhite }).hex;
+    const blackHex = twColorHelper({ colorString: altBlack, tailwindConfig }).hex;
+    const whiteHex = twColorHelper({ colorString: altWhite, tailwindConfig }).hex;
     if (!middleHex) {
         let fallbackPosition = (_a = Object.keys(providedShades || {})) === null || _a === void 0 ? void 0 : _a[0];
         const fallBackProvidedColor = (_b = Object.values(providedShades || {})) === null || _b === void 0 ? void 0 : _b[0];
         const fallBack = fallBackProvidedColor || defaultColor || makUiDefaultColors[variant];
-        const resolvedFallBackObject = twColorHelper({ colorString: fallBack });
+        const resolvedFallBackObject = twColorHelper({
+            colorString: fallBack,
+            tailwindConfig,
+        });
         const resolvedTailwindColors = constructTailwindObject({
             hex: resolvedFallBackObject.hex,
             step: steps,
@@ -316,10 +331,14 @@ export const getConstructedShades = ({ defaultColor, middleHex, providedShades, 
             blackHex,
             whiteHex,
             hexPosition: Number(fallbackPosition),
+            tailwindConfig,
         });
         for (const [shade, color] of Object.entries(resolvedTailwindColors)) {
             if (providedShades && providedShades[shade]) {
-                const twObj = twColorHelper({ colorString: providedShades[shade] });
+                const twObj = twColorHelper({
+                    colorString: providedShades[shade],
+                    tailwindConfig,
+                });
                 shadeHex = twObj.hex;
             }
             else {
@@ -339,10 +358,14 @@ export const getConstructedShades = ({ defaultColor, middleHex, providedShades, 
             blackHex,
             whiteHex,
             hexPosition,
+            tailwindConfig,
         });
         for (const [shade, color] of Object.entries(tailwindColors)) {
             if (providedShades && providedShades[shade]) {
-                const twObj = twColorHelper({ colorString: providedShades[shade] });
+                const twObj = twColorHelper({
+                    colorString: providedShades[shade],
+                    tailwindConfig,
+                });
                 shadeHex = twObj.hex;
             }
             else {
@@ -404,7 +427,7 @@ export const generateDefaultStatesObject = ({ defaultShades = makUiDefaultStateS
     }
     return defaultStatesObject;
 };
-export const twColorHelper = ({ colorString, opacity, shade, useDefaults = true, defaults = makUiDefaultColors, defaultKey = "primary", }) => {
+export const twColorHelper = ({ colorString, opacity, shade, useDefaults = true, defaults = makUiDefaultColors, defaultKey = "primary", tailwindConfig, }) => {
     if (colorString === null || colorString === void 0 ? void 0 : colorString.includes("#")) {
         const hex = colorString;
         return {
@@ -518,6 +541,7 @@ export const twColorHelper = ({ colorString, opacity, shade, useDefaults = true,
             color,
             shade: variableShade,
             absolute: false,
+            tailwindConfig,
         });
         const isTwColor = !!color && !!variableShade;
         return {
@@ -549,7 +573,7 @@ export const concatNestedKeys = (obj, prefix = "") => {
     });
     return result;
 };
-export const getTwHex = ({ colorString, color, shade, absolute, }) => {
+export const getTwHex = ({ colorString, color, shade, absolute, tailwindConfig, }) => {
     const black = colors["black"];
     const white = colors["white"];
     const handleAbsolute = (absoluteColor) => {
@@ -578,24 +602,7 @@ export const getTwHex = ({ colorString, color, shade, absolute, }) => {
             return black;
         }
         else {
-            let twConfig = {};
-            // try {
-            //   const configPath = path.join(__dirname, "../user-config.json")
-            //   const tailwindConfigFile = JSON.parse(
-            //     fs.readFileSync(configPath, "utf8")
-            //   )
-            //   if (tailwindConfigFile.tailwindConfigPath) {
-            //     twConfig = require(path.resolve(
-            //       tailwindConfigFile.tailwindConfigPath
-            //     ))
-            //   } else {
-            //     console.log(
-            //       "No Tailwind configuration path specified. Using default configuration."
-            //     )
-            //   }
-            // } catch (error) {
-            //   console.error("Error reading user configuration:", error)
-            // }
+            let twConfig = tailwindConfig;
             const tailwindCustomColors = ((_b = (_a = twConfig === null || twConfig === void 0 ? void 0 : twConfig.theme) === null || _a === void 0 ? void 0 : _a.extend) === null || _b === void 0 ? void 0 : _b.colors) || {};
             const [colorGroup, colorSubGroup] = rootColor.split("-");
             const customColorHex = ((_c = tailwindCustomColors === null || tailwindCustomColors === void 0 ? void 0 : tailwindCustomColors[rootColor]) === null || _c === void 0 ? void 0 : _c[rootShade]) ||
@@ -620,7 +627,10 @@ export const getTwHex = ({ colorString, color, shade, absolute, }) => {
         return hex;
     }
     if (colorString) {
-        const { color, shade, absolute } = twColorHelper({ colorString });
+        const { color, shade, absolute } = twColorHelper({
+            colorString,
+            tailwindConfig,
+        });
         if (absolute && typeof color === "string")
             return handleAbsolute(color);
         if (!color || !shade)
@@ -755,7 +765,7 @@ const getClassNameAsObject = ({ key, value, enabledThemeModes, }) => {
     }
     return classNamesArray;
 };
-export const extractInitialPalette = ({ palette, enabledThemeModes, }) => {
+export const extractInitialPalette = ({ palette, enabledThemeModes, tailwindConfig, }) => {
     let themePalette = {};
     for (const theme of enabledThemeModes) {
         themePalette[theme] = {};
@@ -801,7 +811,10 @@ export const extractInitialPalette = ({ palette, enabledThemeModes, }) => {
                     splitClassNames.forEach((className) => {
                         const splitClassName = className.split(":");
                         const color = splitClassName[splitClassName.length - 1];
-                        const hex = twColorHelper({ colorString: color }).hex;
+                        const hex = twColorHelper({
+                            colorString: color,
+                            tailwindConfig,
+                        }).hex;
                         const altThemes = [];
                         makUiThemesSet.has(splitClassName[0])
                             ? altThemes.push(splitClassName[0])

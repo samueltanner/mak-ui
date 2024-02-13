@@ -15,7 +15,7 @@ export declare const isEmptyObject: (obj: GenericObject | undefined) => boolean;
 export declare const isNestedObject: (obj: GenericObject) => boolean;
 export declare const isObject: (v: any) => v is GenericObject;
 export declare const deepMerge: (...objects: (GenericObject | undefined)[]) => {};
-export declare const constructTailwindObject: ({ hex, step, includeNearAbsolutes, hexPosition, includeBlackAndWhite, blackHex, whiteHex, }: {
+export declare const constructTailwindObject: ({ hex, step, includeNearAbsolutes, hexPosition, includeBlackAndWhite, blackHex, whiteHex, tailwindConfig, }: {
     hex: string;
     step?: number | undefined;
     includeNearAbsolutes?: boolean | undefined;
@@ -23,6 +23,7 @@ export declare const constructTailwindObject: ({ hex, step, includeNearAbsolutes
     includeBlackAndWhite?: boolean | undefined;
     blackHex?: string | undefined;
     whiteHex?: string | undefined;
+    tailwindConfig: any;
 }) => MakUiVerboseShades;
 export declare const getThemeShadesObj: (shades?: MakUiThemeShadesInput) => {
     light: {
@@ -44,12 +45,13 @@ export declare const getThemeShadesObj: (shades?: MakUiThemeShadesInput) => {
         custom: number;
     };
 };
-export declare const getConstructedTheme: ({ providedVariants, theme, defaultShades, altBlack, altWhite, }: {
+export declare const getConstructedTheme: ({ providedVariants, theme, defaultShades, altBlack, altWhite, tailwindConfig, }: {
     providedVariants: MakUiVerboseThemeVariant;
     theme: MakUiThemeKey;
     defaultShades: MakUiThemeShades;
     altBlack: string;
     altWhite: string;
+    tailwindConfig: any;
 }) => {
     primary: string;
     secondary: string;
@@ -60,7 +62,7 @@ export declare const getConstructedTheme: ({ providedVariants, theme, defaultSha
     black: string;
     white: string;
 };
-export declare const getConstructedShades: ({ defaultColor, middleHex, providedShades, steps, variant, includeBlackAndWhite, includeNearAbsolutes, altBlack, altWhite, hexPosition, }: {
+export declare const getConstructedShades: ({ defaultColor, middleHex, providedShades, steps, variant, includeBlackAndWhite, includeNearAbsolutes, altBlack, altWhite, hexPosition, tailwindConfig, }: {
     defaultColor?: string | undefined;
     middleHex?: string | undefined;
     providedShades?: Record<string, string> | undefined;
@@ -71,6 +73,7 @@ export declare const getConstructedShades: ({ defaultColor, middleHex, providedS
     altBlack?: string | undefined;
     altWhite?: string | undefined;
     hexPosition?: number | undefined;
+    tailwindConfig: any;
 }) => MakUiVerboseShades;
 export declare const getOpacity: ({ opacityValue, override, }: {
     opacityValue?: string | number | null | undefined;
@@ -88,20 +91,22 @@ export declare const generateDefaultStatesObject: ({ defaultShades, defaultColor
     baseShade?: number | undefined;
     multiplier?: number | undefined;
 }) => MakUiState;
-export declare const twColorHelper: ({ colorString, opacity, shade, useDefaults, defaults, defaultKey, }: {
+export declare const twColorHelper: ({ colorString, opacity, shade, useDefaults, defaults, defaultKey, tailwindConfig, }: {
     colorString?: string | undefined | null;
     opacity?: number | string | undefined | null;
     shade?: number | string | undefined | null;
     useDefaults?: boolean | undefined;
     defaults?: MakUiDefaultColors | MakUiDefaultStateColors | undefined;
     defaultKey?: MakUiVariantKey | MakUiStateKey | undefined;
+    tailwindConfig: any;
 }) => TWColorHelperResponse;
 export declare const concatNestedKeys: (obj: NestedObject, prefix?: string) => NestedObject;
-export declare const getTwHex: ({ colorString, color, shade, absolute, }: {
+export declare const getTwHex: ({ colorString, color, shade, absolute, tailwindConfig, }: {
     colorString?: string | undefined;
     shade?: string | number | undefined;
     color?: string | undefined;
     absolute?: boolean | undefined;
+    tailwindConfig: any;
 }) => string;
 export declare const detectSystemTheme: () => "light" | "dark" | undefined;
 export declare const separateObjectByKey: <T extends {
@@ -115,9 +120,10 @@ export declare const separateObjectByKey: <T extends {
 };
 export declare const splitKeyAtChar: (obj: GenericObject, char: string) => {};
 export declare const splitStringAtCapital: (string: string) => string[];
-export declare const extractInitialPalette: ({ palette, enabledThemeModes, }: {
+export declare const extractInitialPalette: ({ palette, enabledThemeModes, tailwindConfig, }: {
     palette: MakUiFlexiblePaletteInput;
     enabledThemeModes: MakUiThemeKey[];
+    tailwindConfig: any;
 }) => MakUiVerbosePalette;
 export declare const objectToClassName: ({ ...args }: ObjectToClassNameObjectProp) => string;
 export declare const parseClassNameToStyleObject: ({ className, makClassName, activeTheme, currentThemeMode, }: {
