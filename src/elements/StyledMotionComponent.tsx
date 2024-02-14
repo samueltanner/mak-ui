@@ -19,10 +19,11 @@ const StyledMotionComponent = forwardRef(
     }: {
       as: string
       styleObject: GenericObject
-      ref?: Ref<any>
+      ref?: React.Ref<any>
       motionProps?: MotionProps
-      className?: string
+      makTwClassName?: string
       makClassName?: string
+      twClassName?: string
       componentTheme?: ComponentWrapperResponse["componentTheme"]
       componentBorder?: ComponentWrapperResponse["componentBorder"]
       componentText?: ComponentWrapperResponse["componentText"]
@@ -50,7 +51,7 @@ const StyledMotionComponent = forwardRef(
     } = props
     const MotionComponent = motion[
       Component as keyof typeof motion
-    ] as ComponentType<any>
+    ] as React.ComponentType<any>
 
     const memoizedMotionProps = useMemo(() => motionProps, [motionProps])
 
@@ -60,7 +61,8 @@ const StyledMotionComponent = forwardRef(
       <BaseStyledComponent
         as={MotionComponent}
         styleObject={styleObject}
-        className={props.className}
+        className={props.makTwClassName}
+        data-class={props.twClassName}
         data-mak-class={props.makClassName}
         data-mak-style={formattedStyleString}
         ref={ref}

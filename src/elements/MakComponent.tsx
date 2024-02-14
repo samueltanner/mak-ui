@@ -58,12 +58,16 @@ const MakComponent = memo(
         }
       }, [setStyleSheet, pseudoClassObject])
 
-      resolvedClassName = [resolvedClassName, resolvedMakClassName]
+      const resolvedCombinedClassName = [
+        resolvedClassName,
+        resolvedMakClassName,
+      ]
         .join(" ")
         .trim()
 
       const allProps = {
-        className: resolvedClassName,
+        makTwClassName: resolvedCombinedClassName,
+        twClassName: resolvedClassName,
         makClassName: resolvedMakClassName,
         component,
         defaultConfig: componentConfig,

@@ -13,7 +13,6 @@ import {
   MakUiThemeVariantKey,
   MakUiVariantKey,
 } from "../types/index"
-
 import { withComputedProps } from "../functions/componentPropsFunction"
 
 export const componentWrapperLogic = ({

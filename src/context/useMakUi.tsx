@@ -55,20 +55,11 @@ type PaletteGeneratorProps = {
 }
 
 type MakUiProviderProps = {
-  children: ReactNode
+  children: React.ReactNode
   palette?: MakUiFlexiblePaletteInput
-  paletteOverride?: MakUiVerbosePalette
   componentConfig?: MakUiComponentConfig
-  buttonConfig?: MakUiRootComponentConfig
-  themeShades?: MakUiThemeShades
-  stateShades?: MakUiStateShades
   enableSystem?: boolean
   defaultTheme?: MakUiThemeKey
-  enableDarkMode?: boolean
-  enableCustomMode?: boolean
-  enabledStates?: MakUiInteractionStateKey[]
-  shadeStep?: ShadeStep
-  includeBlackAndWhite?: boolean
   paletteGenProps?: PaletteGeneratorProps
   tailwindConfig?: any
 }
@@ -312,7 +303,6 @@ const MakUiProviderChild = ({
 
 interface MakUiContext {
   componentConfig: MakUiComponentConfig
-
   theme: MakUiThemeKey
   setTheme: (themeMode: MakUiThemeKey) => void
   formattingThemes: boolean

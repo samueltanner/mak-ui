@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { GenericObject } from ".."
-import React, { Ref, forwardRef } from "react"
+import React, { forwardRef } from "react"
 import { formatJsonToHtmlString } from "../functions/helpers"
 
 const BaseStyledComponent = styled.div<any>(({ styleObject }) => ({
@@ -16,9 +16,10 @@ const StyledComponent = forwardRef(
     }: {
       as: keyof JSX.IntrinsicElements
       styleObject: GenericObject
-      className?: string
+      makTwClassName?: string
       makClassName?: string
-      ref?: Ref<any>
+      twClassName?: string
+      ref?: React.Ref<any>
     },
     ref
   ) => {
@@ -28,7 +29,8 @@ const StyledComponent = forwardRef(
       <BaseStyledComponent
         as={Component}
         styleObject={styleObject}
-        className={props.className}
+        className={props.makTwClassName}
+        data-class={props.twClassName}
         data-mak-class={props.makClassName}
         data-mak-style={formattedStyleString}
         ref={ref}
