@@ -2642,7 +2642,8 @@ const StyledComponent = /*#__PURE__*/React.forwardRef((_a, ref) => {
   return /*#__PURE__*/React__default["default"].createElement(BaseStyledComponent$1, _extends({
     as: Component,
     styleObject: styleObject,
-    className: props.className,
+    className: props.makTwClassName,
+    "data-class": props.twClassName,
     "data-mak-class": props.makClassName,
     "data-mak-style": formattedStyleString,
     ref: ref
@@ -2667,7 +2668,8 @@ const StyledMotionComponent = /*#__PURE__*/React.forwardRef((_a, ref) => {
   return /*#__PURE__*/React__default["default"].createElement(BaseStyledComponent, _extends({
     as: MotionComponent,
     styleObject: styleObject,
-    className: props.className,
+    className: props.makTwClassName,
+    "data-class": props.twClassName,
     "data-mak-class": props.makClassName,
     "data-mak-style": formattedStyleString,
     ref: ref
@@ -2725,9 +2727,10 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
       });
     }
   }, [setStyleSheet, pseudoClassObject]);
-  resolvedClassName = [resolvedClassName, resolvedMakClassName].join(" ").trim();
+  const resolvedCombinedClassName = [resolvedClassName, resolvedMakClassName].join(" ").trim();
   const allProps = Object.assign({
-    className: resolvedClassName,
+    makTwClassName: resolvedCombinedClassName,
+    twClassName: resolvedClassName,
     makClassName: resolvedMakClassName,
     component,
     defaultConfig: componentConfig

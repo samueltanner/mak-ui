@@ -6,8 +6,9 @@ declare const StyledMotionComponent: React.ForwardRefExoticComponent<Omit<{
     styleObject: GenericObject;
     ref?: React.Ref<any> | undefined;
     motionProps?: MotionProps | undefined;
-    className?: string | undefined;
+    makTwClassName?: string | undefined;
     makClassName?: string | undefined;
+    twClassName?: string | undefined;
     componentTheme?: import("../types/index").MakUiVerboseThemeVariant | undefined;
     componentBorder?: import("../types/index").MakUiVerboseVariant | undefined;
     componentText?: import("../types/index").MakUiVerboseVariant | undefined;

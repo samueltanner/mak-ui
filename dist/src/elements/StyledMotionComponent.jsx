@@ -20,7 +20,7 @@ const StyledMotionComponent = forwardRef((_a, ref) => {
     const MotionComponent = motion[Component];
     const memoizedMotionProps = useMemo(() => motionProps, [motionProps]);
     const formattedStyleString = formatJsonToHtmlString(styleObject);
-    return (<BaseStyledComponent as={MotionComponent} styleObject={styleObject} className={props.className} data-mak-class={props.makClassName} data-mak-style={formattedStyleString} ref={ref} {...memoizedMotionProps} {...restProps}/>);
+    return (<BaseStyledComponent as={MotionComponent} styleObject={styleObject} className={props.makTwClassName} data-class={props.twClassName} data-mak-class={props.makClassName} data-mak-style={formattedStyleString} ref={ref} {...memoizedMotionProps} {...restProps}/>);
 });
 StyledMotionComponent.displayName = "StyledMotionComponent";
 export default StyledMotionComponent;

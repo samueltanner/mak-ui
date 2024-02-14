@@ -16,7 +16,7 @@ const BaseStyledComponent = styled.div(({ styleObject }) => (Object.assign({}, s
 const StyledComponent = forwardRef((_a, ref) => {
     var { as: Component = "div", styleObject } = _a, props = __rest(_a, ["as", "styleObject"]);
     const formattedStyleString = formatJsonToHtmlString(styleObject);
-    return (<BaseStyledComponent as={Component} styleObject={styleObject} className={props.className} data-mak-class={props.makClassName} data-mak-style={formattedStyleString} ref={ref} {...props}/>);
+    return (<BaseStyledComponent as={Component} styleObject={styleObject} className={props.makTwClassName} data-class={props.twClassName} data-mak-class={props.makClassName} data-mak-style={formattedStyleString} ref={ref} {...props}/>);
 });
 StyledComponent.displayName = "StyledComponent";
 export default StyledComponent;

@@ -48,10 +48,13 @@ const MakComponent = memo(forwardRef((_a, ref) => {
             });
         }
     }, [setStyleSheet, pseudoClassObject]);
-    resolvedClassName = [resolvedClassName, resolvedMakClassName]
+    const resolvedCombinedClassName = [
+        resolvedClassName,
+        resolvedMakClassName,
+    ]
         .join(" ")
         .trim();
-    const allProps = Object.assign({ className: resolvedClassName, makClassName: resolvedMakClassName, component, defaultConfig: componentConfig }, responseRest);
+    const allProps = Object.assign({ makTwClassName: resolvedCombinedClassName, twClassName: resolvedClassName, makClassName: resolvedMakClassName, component, defaultConfig: componentConfig }, responseRest);
     const inlineStyles = Object.assign(Object.assign({}, baseClassObject), pseudoClassObject);
     const isMotionObject = motion && !isEmptyObject(motion);
     if (isMotionObject) {

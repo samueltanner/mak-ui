@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { MakUiFlexiblePaletteInput, MakUiInteractionStateKey, MakUiSimplePalette, MakUiSimpleTheme, MakUiStateShades, MakUiThemeKey, MakUiThemeShades, MakUiVerbosePalette, MakUiVerboseTheme, ShadeStep, MakUiComponentConfig, MakUiRootComponentConfig, GenericObject } from "../types/index";
+import React from "react";
+import { MakUiFlexiblePaletteInput, MakUiSimplePalette, MakUiSimpleTheme, MakUiThemeKey, MakUiThemeShades, MakUiVerbosePalette, MakUiVerboseTheme, ShadeStep, MakUiComponentConfig, GenericObject } from "../types/index";
 type PaletteGeneratorProps = {
     palette?: MakUiFlexiblePaletteInput;
     paletteOverride?: MakUiVerbosePalette | Partial<MakUiVerbosePalette>;
@@ -15,20 +15,11 @@ type PaletteGeneratorProps = {
     tailwindConfig?: any;
 };
 type MakUiProviderProps = {
-    children: ReactNode;
+    children: React.ReactNode;
     palette?: MakUiFlexiblePaletteInput;
-    paletteOverride?: MakUiVerbosePalette;
     componentConfig?: MakUiComponentConfig;
-    buttonConfig?: MakUiRootComponentConfig;
-    themeShades?: MakUiThemeShades;
-    stateShades?: MakUiStateShades;
     enableSystem?: boolean;
     defaultTheme?: MakUiThemeKey;
-    enableDarkMode?: boolean;
-    enableCustomMode?: boolean;
-    enabledStates?: MakUiInteractionStateKey[];
-    shadeStep?: ShadeStep;
-    includeBlackAndWhite?: boolean;
     paletteGenProps?: PaletteGeneratorProps;
     tailwindConfig?: any;
 };
