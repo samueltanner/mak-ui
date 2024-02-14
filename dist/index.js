@@ -2,18 +2,18 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var React = require('react');
 var chroma = require('chroma-js');
 var colors = require('tailwindcss/colors');
+var React = require('react');
 var nextThemes = require('next-themes');
 var styled = require('@emotion/styled');
 var framerMotion = require('framer-motion');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var chroma__default = /*#__PURE__*/_interopDefaultLegacy(chroma);
 var colors__default = /*#__PURE__*/_interopDefaultLegacy(colors);
+var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var styled__default = /*#__PURE__*/_interopDefaultLegacy(styled);
 
 /******************************************************************************
@@ -390,6 +390,35 @@ const makUiDefaultThemeShades = {
     black: 1000
   }
 };
+const makUiDefaultStateShades = {
+  base: 500,
+  hover: 400,
+  active: 600,
+  autofill: 500,
+  click: 400,
+  checked: 600,
+  closed: 500,
+  default: 400,
+  disabled: 300,
+  empty: 500,
+  enabled: 500,
+  focus: 500,
+  "focus-visible": 500,
+  "focus-within": 500,
+  "in-range": 500,
+  indeterminate: 500,
+  invalid: 500,
+  open: 500,
+  "out-of-range": 500,
+  "placeholder-shown": 500,
+  "read-only": 500,
+  required: 500,
+  selected: 500,
+  selection: 500,
+  target: 500,
+  valid: 500,
+  visited: 500
+};
 const defaultButtonConfig = {
   className: "h-fit w-fit px-2 py-1 text-sm rounded-md font-semibold fade-in-out"
 };
@@ -634,6 +663,32 @@ const tailwindToCssModifierObject = Object.assign({
   "peer-first-child": selector => `.peer:first-child) ~ ${selector}`
 }, mediaQueries);
 
+const setLocalStorage = (key, value) => {
+  if (typeof window === "undefined") return;
+  if (typeof value === "object") {
+    value = JSON.stringify(value);
+  }
+  window.localStorage.setItem(key, value);
+};
+const getLocalStorage = key => {
+  if (typeof window === "undefined") return;
+  return window.localStorage.getItem(key);
+};
+const removeLocalStorage = key => {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(key);
+};
+const mergeWithFallback = (primary, ...fallbacks) => {
+  let result = {};
+  fallbacks.forEach(fallback => {
+    if (isObject(fallback) && !isEmptyObject(fallback)) Object.keys(fallback).forEach(key => {
+      if (result[key] === undefined) {
+        result[key] = fallback[key];
+      }
+    });
+  });
+  return Object.assign(Object.assign({}, result), primary);
+};
 const nearestMultiple = (num, multiple, roundDir = "nearest") => {
   const delta = roundDir === "up" ? multiple : roundDir === "down" ? -multiple : 0;
   const remainder = num % multiple;
@@ -665,6 +720,7 @@ const isEmptyObject = obj => {
   if (obj === undefined) return false;
   return isObject(obj) && Object.keys(obj).length === 0;
 };
+const isNestedObject = obj => isObject(obj) && Object.values(obj).some(isObject);
 const isObject = v => v !== null && typeof v === "object" && !Array.isArray(v) && typeof v !== "string";
 const deepMerge = (...objects) => {
   const result = {};
@@ -725,6 +781,42 @@ const constructTailwindObject = ({
     tailwindColors[1000] = blackHex;
   }
   return tailwindColors;
+};
+const getThemeShadesObj = shades => {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+  const lightPrimary = ((_a = shades === null || shades === void 0 ? void 0 : shades.light) === null || _a === void 0 ? void 0 : _a.primary) || getNormalizedShadeNumber(50);
+  const lightSecondary = ((_b = shades === null || shades === void 0 ? void 0 : shades.light) === null || _b === void 0 ? void 0 : _b.secondary) || getNormalizedShadeNumber(lightPrimary + 50);
+  const lightTertiary = ((_c = shades === null || shades === void 0 ? void 0 : shades.light) === null || _c === void 0 ? void 0 : _c.tertiary) || getNormalizedShadeNumber(lightSecondary + 100);
+  const lightCustom = ((_d = shades === null || shades === void 0 ? void 0 : shades.light) === null || _d === void 0 ? void 0 : _d.custom) || getNormalizedShadeNumber(950);
+  const darkPrimary = ((_e = shades === null || shades === void 0 ? void 0 : shades.dark) === null || _e === void 0 ? void 0 : _e.primary) || getNormalizedShadeNumber(950);
+  const darkSecondary = ((_f = shades === null || shades === void 0 ? void 0 : shades.dark) === null || _f === void 0 ? void 0 : _f.secondary) || getNormalizedShadeNumber(darkPrimary - 50);
+  const darkTertiary = ((_g = shades === null || shades === void 0 ? void 0 : shades.dark) === null || _g === void 0 ? void 0 : _g.tertiary) || getNormalizedShadeNumber(darkSecondary - 100);
+  const darkCustom = ((_h = shades === null || shades === void 0 ? void 0 : shades.dark) === null || _h === void 0 ? void 0 : _h.custom) || getNormalizedShadeNumber(50);
+  const customPrimary = ((_j = shades === null || shades === void 0 ? void 0 : shades.custom) === null || _j === void 0 ? void 0 : _j.primary) || getNormalizedShadeNumber(500);
+  const customSecondary = ((_k = shades === null || shades === void 0 ? void 0 : shades.custom) === null || _k === void 0 ? void 0 : _k.secondary) || getNormalizedShadeNumber(customPrimary + 100);
+  const customTertiary = ((_l = shades === null || shades === void 0 ? void 0 : shades.custom) === null || _l === void 0 ? void 0 : _l.tertiary) || getNormalizedShadeNumber(customPrimary + 200);
+  const customCustom = ((_m = shades === null || shades === void 0 ? void 0 : shades.custom) === null || _m === void 0 ? void 0 : _m.custom) || getNormalizedShadeNumber(customPrimary + 300);
+  const responseObj = {
+    light: {
+      primary: getNormalizedShadeNumber(lightPrimary),
+      secondary: getNormalizedShadeNumber(lightSecondary),
+      tertiary: getNormalizedShadeNumber(lightTertiary),
+      custom: getNormalizedShadeNumber(lightCustom)
+    },
+    dark: {
+      primary: getNormalizedShadeNumber(darkPrimary),
+      secondary: getNormalizedShadeNumber(darkSecondary),
+      tertiary: getNormalizedShadeNumber(darkTertiary),
+      custom: getNormalizedShadeNumber(darkCustom)
+    },
+    custom: {
+      primary: getNormalizedShadeNumber(customPrimary),
+      secondary: getNormalizedShadeNumber(customSecondary),
+      tertiary: getNormalizedShadeNumber(customTertiary),
+      custom: getNormalizedShadeNumber(customCustom)
+    }
+  };
+  return responseObj;
 };
 const includesShade = string => {
   if (!string) return false;
@@ -992,6 +1084,38 @@ const getOpacity = ({
     value: opacityNum
   };
 };
+const generateDefaultShadesDiffOject = ({
+  defaultShades = makUiDefaultStateShades
+}) => {
+  let defaultShadesDiffObject = {};
+  const baseShade = defaultShades.base;
+  Object.entries(defaultShades).forEach(([state, shade]) => {
+    const shadeDiff = shade - baseShade;
+    defaultShadesDiffObject[state] = shadeDiff;
+  });
+  return defaultShadesDiffObject;
+};
+const generateDefaultStatesObject = ({
+  defaultShades = makUiDefaultStateShades,
+  defaultColor = "zinc",
+  baseShade = 500,
+  multiplier = 1
+}) => {
+  const shadesDiff = generateDefaultShadesDiffOject({
+    defaultShades
+  });
+  const isAbsoluteColor = defaultColor === "white" || defaultColor === "black";
+  let defaultStatesObject = {};
+  for (const [state, diff] of Object.entries(shadesDiff)) {
+    const shade = baseShade + diff * multiplier;
+    if (isAbsoluteColor) {
+      defaultStatesObject[state] = defaultColor;
+    } else {
+      defaultStatesObject[state] = `${defaultColor}-${getNormalizedShadeNumber(shade)}`;
+    }
+  }
+  return defaultStatesObject;
+};
 const twColorHelper = ({
   colorString,
   opacity,
@@ -1123,6 +1247,18 @@ const twColorHelper = ({
     };
   }
 };
+const concatNestedKeys = (obj, prefix = "") => {
+  let result = {};
+  Object.keys(obj).forEach(key => {
+    const newKey = prefix ? `${prefix}-${key}` : key;
+    if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) {
+      Object.assign(result, concatNestedKeys(obj[key], newKey));
+    } else {
+      result[newKey] = obj[key];
+    }
+  });
+  return result;
+};
 const getTwHex = ({
   colorString,
   color,
@@ -1188,6 +1324,42 @@ const getTwHex = ({
     return hex;
   }
   return black;
+};
+const detectSystemTheme = () => {
+  if (typeof window === "undefined") return;
+  const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+  const detectedTheme = systemTheme.matches ? "dark" : "light";
+  return detectedTheme;
+};
+const separateObjectByKey = ({
+  obj,
+  keys,
+  fallbackKey = "default"
+}) => {
+  const responseObj = {};
+  const defaultObj = Object.assign({}, obj);
+  Object.entries(obj).forEach(([k, v]) => {
+    for (const key of keys) {
+      if (k.includes(key)) {
+        if (!responseObj[key.toLowerCase()]) {
+          responseObj[key.toLowerCase()] = {};
+        }
+        responseObj[key.toLowerCase()][k] = v;
+        delete defaultObj[k];
+      }
+    }
+  });
+  responseObj[fallbackKey.toLocaleLowerCase()] = defaultObj;
+  return responseObj;
+};
+const splitKeyAtChar = (obj, char) => {
+  if (!isObject(obj)) return obj;
+  if (!char) return obj;
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    return Object.assign(Object.assign({}, acc), {
+      [key.split(char)[0]]: value
+    });
+  }, {});
 };
 const splitStringAtCapital = string => {
   return string.split(/(?=[A-Z])/);
@@ -1422,6 +1594,43 @@ const extractInitialPalette = ({
   }
   return paletteObject;
 };
+const objectToClassName = _a => {
+  var args = __rest(_a, []);
+  return parseProps(Object.assign({}, args));
+  function parseProps({
+    object,
+    variant,
+    allowedStates,
+    allowedModifiers
+  }) {
+    if (!isObject(object)) return "";
+    let parsedStringArray = [];
+    if (!allowedStates || !allowedStates.has("not-base")) {
+      allowedStates = new Set([...(allowedStates || []), "base"]);
+    }
+    let allowedObject = {};
+    if (allowedStates === null || allowedStates === void 0 ? void 0 : allowedStates.size) {
+      [...allowedStates].forEach(state => {
+        allowedObject[state] = object[state];
+      });
+    }
+    Object.entries(allowedObject).forEach(([key, value]) => {
+      if (key === "not-base") return;
+      if (key === "base") {
+        parsedStringArray.push(`${variant}-${value}`);
+        return;
+      } else {
+        parsedStringArray.push(`${key}:${variant}-${value}`);
+        if (allowedModifiers === null || allowedModifiers === void 0 ? void 0 : allowedModifiers.size) {
+          [...allowedModifiers].forEach(modifier => {
+            parsedStringArray.push(`${modifier}-${key}:${variant}-${value}`);
+          });
+        }
+      }
+    });
+    return parsedStringArray.join(" ");
+  }
+};
 const parseClassNameToStyleObject = ({
   className = "",
   makClassName = undefined,
@@ -1631,6 +1840,23 @@ const parseMakClassNames = ({
     unresolved
   };
 };
+const ensureUtilityClass = (utility, className) => {
+  if (!utility) {
+    className = utility;
+    utility = "bg-";
+  }
+  if (!utility.includes("-")) utility = `${utility}-`;
+  if (!className.includes(utility)) {
+    return `${utility}${className}`;
+  } else {
+    className = className.split(utility)[1] || className.split(utility)[0];
+    className = `${utility}${className}`;
+  }
+  return className;
+};
+const mergeClassNames = (...props) => {
+  return props.join(" ");
+};
 const mergeDefaultConfig = ({
   makUi,
   useConfig,
@@ -1682,6 +1908,210 @@ const formatJsonToHtmlString = jsonObject => {
       return `${key}: ${value}`;
     }
   }).join("; ");
+};
+
+const typeProps = {
+  //theme
+  useConfig: true,
+  darkMode: false,
+  lightMode: false,
+  customMode: false,
+  themeMode: "light",
+  //themeVariant
+  themeWhite: false,
+  themeBlack: false,
+  themeLight: false,
+  themeDark: false,
+  themePrimary: false,
+  themeSecondary: false,
+  themeTertiary: false,
+  themeCustom: false,
+  themeVariant: undefined,
+  themeOpacity: 100,
+  primary: false,
+  secondary: false,
+  tertiary: false,
+  success: false,
+  error: false,
+  warning: false,
+  danger: false,
+  info: false,
+  custom: false,
+  dark: false,
+  light: false,
+  variant: undefined,
+  variantShade: 500,
+  variantOpacity: 100,
+  textPrimary: false,
+  textSecondary: false,
+  textTertiary: false,
+  textSuccess: false,
+  textError: false,
+  textWarning: false,
+  textDanger: false,
+  textInfo: false,
+  textCustom: false,
+  textLight: false,
+  textDark: false,
+  text: undefined,
+  textShade: 500,
+  textOpacity: 100,
+  bgPrimary: false,
+  bgSecondary: false,
+  bgTertiary: false,
+  bgSuccess: false,
+  bgError: false,
+  bgWarning: false,
+  bgDanger: false,
+  bgInfo: false,
+  bgCustom: false,
+  bgLight: false,
+  bgDark: false,
+  bg: undefined,
+  bgShade: undefined,
+  bgOpacity: undefined,
+  borderPrimary: false,
+  borderSecondary: false,
+  borderTertiary: false,
+  borderSuccess: false,
+  borderError: false,
+  borderWarning: false,
+  borderDanger: false,
+  borderInfo: false,
+  borderCustom: false,
+  borderLight: false,
+  borderDark: false,
+  border: undefined,
+  borderShade: 500,
+  borderOpacity: 100,
+  textSize: undefined,
+  borderPx: undefined,
+  className: undefined,
+  makClassName: undefined,
+  height: undefined,
+  width: undefined
+};
+const getThemeModeValue = props => {
+  if (props.themeMode) return props.themeMode;
+  if (props.lightMode) return "light";
+  if (props.darkMode) return "dark";
+  if (props.customMode) return "custom";
+  return undefined;
+};
+const propValue = (props, variant) => {
+  if (!props) return undefined;
+  if (props === true) return variant;
+  if (props === false) return undefined;
+  if (typeof props !== "boolean") return `${variant}-${props}`;
+};
+const getThemeVariantValue = props => {
+  if (props.themeVariant) return props.themeVariant;
+  if (props.themePrimary) return propValue(props.themePrimary, "primary");
+  if (props.themeSecondary) return propValue(props.themeSecondary, "secondary");
+  if (props.themeTertiary) return propValue(props.themeTertiary, "tertiary");
+  if (props.themeCustom) return propValue(props.themeCustom, "custom");
+  if (props.themeLight) return propValue(props.themeLight, "light");
+  if (props.themeDark) return propValue(props.themeDark, "dark");
+  if (props.themeWhite) return propValue(props.themeWhite, "white");
+  if (props.themeBlack) return propValue(props.themeBlack, "black");
+  return undefined;
+};
+const getColorValue = props => {
+  if (props.variant) return props.variant;
+  if (props.primary) return propValue(props.primary, "primary");
+  if (props.secondary) return propValue(props.secondary, "secondary");
+  if (props.tertiary) return propValue(props.tertiary, "tertiary");
+  if (props.success) return propValue(props.success, "success");
+  if (props.error) return propValue(props.error, "error");
+  if (props.warning) return propValue(props.warning, "warning");
+  if (props.danger) return propValue(props.danger, "danger");
+  if (props.info) return propValue(props.info, "info");
+  if (props.custom) return propValue(props.custom, "custom");
+  if (props.light) return propValue(props.light, "light");
+  if (props.dark) return propValue(props.dark, "dark");
+  return undefined;
+};
+const getBorderValue = props => {
+  if (props.border) return props.border;
+  if (props.borderPrimary) return propValue(props.borderPrimary, "primary");
+  if (props.borderSecondary) return propValue(props.borderSecondary, "secondary");
+  if (props.borderTertiary) return propValue(props.borderTertiary, "tertiary");
+  if (props.borderSuccess) return propValue(props.borderSuccess, "success");
+  if (props.borderError) return propValue(props.borderError, "error");
+  if (props.borderWarning) return propValue(props.borderWarning, "warning");
+  if (props.borderDanger) return propValue(props.borderDanger, "danger");
+  if (props.borderInfo) return propValue(props.borderInfo, "info");
+  if (props.borderCustom) return propValue(props.borderCustom, "custom");
+  if (props.borderLight) return propValue(props.borderLight, "light");
+  if (props.borderDark) return propValue(props.borderDark, "dark");
+  return undefined;
+};
+const getTextValue = props => {
+  if (props.text) return props.text;
+  if (props.textPrimary) return propValue(props.textPrimary, "primary");
+  if (props.textSecondary) return propValue(props.textSecondary, "secondary");
+  if (props.textTertiary) return propValue(props.textTertiary, "tertiary");
+  if (props.textSuccess) return propValue(props.textSuccess, "success");
+  if (props.textError) return propValue(props.textError, "error");
+  if (props.textWarning) return propValue(props.textWarning, "warning");
+  if (props.textDanger) return propValue(props.textDanger, "danger");
+  if (props.textInfo) return propValue(props.textInfo, "info");
+  if (props.textCustom) return propValue(props.textCustom, "custom");
+  if (props.textLight) return propValue(props.textLight, "light");
+  if (props.textDark) return propValue(props.textDark, "dark");
+  return undefined;
+};
+const getBgValue = props => {
+  if (props.bg) return props.bg;
+  if (props.bgPrimary) return propValue(props.bgPrimary, "primary");
+  if (props.bgSecondary) return propValue(props.bgSecondary, "secondary");
+  if (props.bgTertiary) return propValue(props.bgTertiary, "tertiary");
+  if (props.bgSuccess) return propValue(props.bgSuccess, "success");
+  if (props.bgError) return propValue(props.bgError, "error");
+  if (props.bgWarning) return propValue(props.bgWarning, "warning");
+  if (props.bgDanger) return propValue(props.bgDanger, "danger");
+  if (props.bgInfo) return propValue(props.bgInfo, "info");
+  if (props.bgCustom) return propValue(props.bgCustom, "custom");
+  if (props.bgLight) return propValue(props.bgLight, "light");
+  if (props.bgDark) return propValue(props.bgDark, "dark");
+  return undefined;
+};
+const withComputedProps = props => {
+  const computedModeProps = getThemeModeValue(props);
+  const computedThemeProps = getThemeVariantValue(props);
+  const computedColorProps = getColorValue(props);
+  const computedBorderProps = getBorderValue(props);
+  const computedTextProps = getTextValue(props);
+  const hasBgProps = getBgValue(props);
+  return Object.assign(Object.assign({}, props), {
+    useConfig: props.useConfig === undefined ? typeProps.useConfig : props.useConfig,
+    mode: computedModeProps,
+    hasModeProps: !!computedModeProps,
+    theme: computedThemeProps,
+    hasThemeProps: !!computedThemeProps,
+    color: computedColorProps,
+    hasColorProps: !!computedColorProps,
+    border: computedBorderProps,
+    hasBorderProps: !!computedBorderProps,
+    text: computedTextProps,
+    hasTextProps: !!computedTextProps,
+    bg: hasBgProps,
+    hasBgProps: !!hasBgProps,
+    themeOpacity: allowFalsyFallback(props.themeOpacity, typeProps.themeOpacity),
+    textOpacity: allowFalsyFallback(props.textOpacity, typeProps.textOpacity),
+    bgOpacity: allowFalsyFallback(props.bgOpacity, typeProps.bgOpacity),
+    variantOpacity: allowFalsyFallback(props.variantOpacity, typeProps.variantOpacity),
+    borderOpacity: allowFalsyFallback(props.borderOpacity, typeProps.borderOpacity),
+    textShade: allowFalsyFallback(props.textShade, typeProps.textShade),
+    bgShade: allowFalsyFallback(props.bgShade, typeProps.bgShade),
+    variantShade: allowFalsyFallback(props.variantShade, typeProps.variantShade),
+    borderShade: allowFalsyFallback(props.borderShade, typeProps.borderShade),
+    borderPx: allowFalsyFallback(props.borderPx, typeProps.borderPx),
+    className: props.className,
+    makClassName: props.makClassName,
+    height: props.height,
+    width: props.width
+  });
 };
 
 const paletteFactory = ({
@@ -2090,210 +2520,6 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
-const typeProps = {
-  //theme
-  useConfig: true,
-  darkMode: false,
-  lightMode: false,
-  customMode: false,
-  themeMode: "light",
-  //themeVariant
-  themeWhite: false,
-  themeBlack: false,
-  themeLight: false,
-  themeDark: false,
-  themePrimary: false,
-  themeSecondary: false,
-  themeTertiary: false,
-  themeCustom: false,
-  themeVariant: undefined,
-  themeOpacity: 100,
-  primary: false,
-  secondary: false,
-  tertiary: false,
-  success: false,
-  error: false,
-  warning: false,
-  danger: false,
-  info: false,
-  custom: false,
-  dark: false,
-  light: false,
-  variant: undefined,
-  variantShade: 500,
-  variantOpacity: 100,
-  textPrimary: false,
-  textSecondary: false,
-  textTertiary: false,
-  textSuccess: false,
-  textError: false,
-  textWarning: false,
-  textDanger: false,
-  textInfo: false,
-  textCustom: false,
-  textLight: false,
-  textDark: false,
-  text: undefined,
-  textShade: 500,
-  textOpacity: 100,
-  bgPrimary: false,
-  bgSecondary: false,
-  bgTertiary: false,
-  bgSuccess: false,
-  bgError: false,
-  bgWarning: false,
-  bgDanger: false,
-  bgInfo: false,
-  bgCustom: false,
-  bgLight: false,
-  bgDark: false,
-  bg: undefined,
-  bgShade: undefined,
-  bgOpacity: undefined,
-  borderPrimary: false,
-  borderSecondary: false,
-  borderTertiary: false,
-  borderSuccess: false,
-  borderError: false,
-  borderWarning: false,
-  borderDanger: false,
-  borderInfo: false,
-  borderCustom: false,
-  borderLight: false,
-  borderDark: false,
-  border: undefined,
-  borderShade: 500,
-  borderOpacity: 100,
-  textSize: undefined,
-  borderPx: undefined,
-  className: undefined,
-  makClassName: undefined,
-  height: undefined,
-  width: undefined
-};
-const getThemeModeValue = props => {
-  if (props.themeMode) return props.themeMode;
-  if (props.lightMode) return "light";
-  if (props.darkMode) return "dark";
-  if (props.customMode) return "custom";
-  return undefined;
-};
-const propValue = (props, variant) => {
-  if (!props) return undefined;
-  if (props === true) return variant;
-  if (props === false) return undefined;
-  if (typeof props !== "boolean") return `${variant}-${props}`;
-};
-const getThemeVariantValue = props => {
-  if (props.themeVariant) return props.themeVariant;
-  if (props.themePrimary) return propValue(props.themePrimary, "primary");
-  if (props.themeSecondary) return propValue(props.themeSecondary, "secondary");
-  if (props.themeTertiary) return propValue(props.themeTertiary, "tertiary");
-  if (props.themeCustom) return propValue(props.themeCustom, "custom");
-  if (props.themeLight) return propValue(props.themeLight, "light");
-  if (props.themeDark) return propValue(props.themeDark, "dark");
-  if (props.themeWhite) return propValue(props.themeWhite, "white");
-  if (props.themeBlack) return propValue(props.themeBlack, "black");
-  return undefined;
-};
-const getColorValue = props => {
-  if (props.variant) return props.variant;
-  if (props.primary) return propValue(props.primary, "primary");
-  if (props.secondary) return propValue(props.secondary, "secondary");
-  if (props.tertiary) return propValue(props.tertiary, "tertiary");
-  if (props.success) return propValue(props.success, "success");
-  if (props.error) return propValue(props.error, "error");
-  if (props.warning) return propValue(props.warning, "warning");
-  if (props.danger) return propValue(props.danger, "danger");
-  if (props.info) return propValue(props.info, "info");
-  if (props.custom) return propValue(props.custom, "custom");
-  if (props.light) return propValue(props.light, "light");
-  if (props.dark) return propValue(props.dark, "dark");
-  return undefined;
-};
-const getBorderValue = props => {
-  if (props.border) return props.border;
-  if (props.borderPrimary) return propValue(props.borderPrimary, "primary");
-  if (props.borderSecondary) return propValue(props.borderSecondary, "secondary");
-  if (props.borderTertiary) return propValue(props.borderTertiary, "tertiary");
-  if (props.borderSuccess) return propValue(props.borderSuccess, "success");
-  if (props.borderError) return propValue(props.borderError, "error");
-  if (props.borderWarning) return propValue(props.borderWarning, "warning");
-  if (props.borderDanger) return propValue(props.borderDanger, "danger");
-  if (props.borderInfo) return propValue(props.borderInfo, "info");
-  if (props.borderCustom) return propValue(props.borderCustom, "custom");
-  if (props.borderLight) return propValue(props.borderLight, "light");
-  if (props.borderDark) return propValue(props.borderDark, "dark");
-  return undefined;
-};
-const getTextValue = props => {
-  if (props.text) return props.text;
-  if (props.textPrimary) return propValue(props.textPrimary, "primary");
-  if (props.textSecondary) return propValue(props.textSecondary, "secondary");
-  if (props.textTertiary) return propValue(props.textTertiary, "tertiary");
-  if (props.textSuccess) return propValue(props.textSuccess, "success");
-  if (props.textError) return propValue(props.textError, "error");
-  if (props.textWarning) return propValue(props.textWarning, "warning");
-  if (props.textDanger) return propValue(props.textDanger, "danger");
-  if (props.textInfo) return propValue(props.textInfo, "info");
-  if (props.textCustom) return propValue(props.textCustom, "custom");
-  if (props.textLight) return propValue(props.textLight, "light");
-  if (props.textDark) return propValue(props.textDark, "dark");
-  return undefined;
-};
-const getBgValue = props => {
-  if (props.bg) return props.bg;
-  if (props.bgPrimary) return propValue(props.bgPrimary, "primary");
-  if (props.bgSecondary) return propValue(props.bgSecondary, "secondary");
-  if (props.bgTertiary) return propValue(props.bgTertiary, "tertiary");
-  if (props.bgSuccess) return propValue(props.bgSuccess, "success");
-  if (props.bgError) return propValue(props.bgError, "error");
-  if (props.bgWarning) return propValue(props.bgWarning, "warning");
-  if (props.bgDanger) return propValue(props.bgDanger, "danger");
-  if (props.bgInfo) return propValue(props.bgInfo, "info");
-  if (props.bgCustom) return propValue(props.bgCustom, "custom");
-  if (props.bgLight) return propValue(props.bgLight, "light");
-  if (props.bgDark) return propValue(props.bgDark, "dark");
-  return undefined;
-};
-const withComputedProps = props => {
-  const computedModeProps = getThemeModeValue(props);
-  const computedThemeProps = getThemeVariantValue(props);
-  const computedColorProps = getColorValue(props);
-  const computedBorderProps = getBorderValue(props);
-  const computedTextProps = getTextValue(props);
-  const hasBgProps = getBgValue(props);
-  return Object.assign(Object.assign({}, props), {
-    useConfig: props.useConfig === undefined ? typeProps.useConfig : props.useConfig,
-    mode: computedModeProps,
-    hasModeProps: !!computedModeProps,
-    theme: computedThemeProps,
-    hasThemeProps: !!computedThemeProps,
-    color: computedColorProps,
-    hasColorProps: !!computedColorProps,
-    border: computedBorderProps,
-    hasBorderProps: !!computedBorderProps,
-    text: computedTextProps,
-    hasTextProps: !!computedTextProps,
-    bg: hasBgProps,
-    hasBgProps: !!hasBgProps,
-    themeOpacity: allowFalsyFallback(props.themeOpacity, typeProps.themeOpacity),
-    textOpacity: allowFalsyFallback(props.textOpacity, typeProps.textOpacity),
-    bgOpacity: allowFalsyFallback(props.bgOpacity, typeProps.bgOpacity),
-    variantOpacity: allowFalsyFallback(props.variantOpacity, typeProps.variantOpacity),
-    borderOpacity: allowFalsyFallback(props.borderOpacity, typeProps.borderOpacity),
-    textShade: allowFalsyFallback(props.textShade, typeProps.textShade),
-    bgShade: allowFalsyFallback(props.bgShade, typeProps.bgShade),
-    variantShade: allowFalsyFallback(props.variantShade, typeProps.variantShade),
-    borderShade: allowFalsyFallback(props.borderShade, typeProps.borderShade),
-    borderPx: allowFalsyFallback(props.borderPx, typeProps.borderPx),
-    className: props.className,
-    makClassName: props.makClassName,
-    height: props.height,
-    width: props.width
-  });
-};
-
 const componentWrapperLogic = ({
   props,
   makUi,
@@ -2547,6 +2773,41 @@ const handler = {
 const mak = new Proxy({}, handler);
 
 exports.MakUiProvider = MakUiProvider;
+exports.allowFalsyFallback = allowFalsyFallback;
+exports.componentWrapperLogic = componentWrapperLogic;
+exports.concatNestedKeys = concatNestedKeys;
+exports.constructTailwindObject = constructTailwindObject;
+exports.deepMerge = deepMerge;
+exports.detectSystemTheme = detectSystemTheme;
+exports.ensureNestedObject = ensureNestedObject;
+exports.ensureUtilityClass = ensureUtilityClass;
+exports.extractInitialPalette = extractInitialPalette;
+exports.formatJsonToHtmlString = formatJsonToHtmlString;
+exports.generateDefaultShadesDiffOject = generateDefaultShadesDiffOject;
+exports.generateDefaultStatesObject = generateDefaultStatesObject;
+exports.getConstructedShades = getConstructedShades;
+exports.getConstructedTheme = getConstructedTheme;
+exports.getLocalStorage = getLocalStorage;
+exports.getOpacity = getOpacity;
+exports.getThemeShadesObj = getThemeShadesObj;
+exports.getTwHex = getTwHex;
+exports.isEmptyObject = isEmptyObject;
+exports.isNestedObject = isNestedObject;
+exports.isObject = isObject;
 exports.mak = mak;
+exports.mergeClassNames = mergeClassNames;
+exports.mergeDefaultConfig = mergeDefaultConfig;
+exports.mergeWithFallback = mergeWithFallback;
+exports.nearestMultiple = nearestMultiple;
+exports.objectToClassName = objectToClassName;
+exports.parseClassNameToStyleObject = parseClassNameToStyleObject;
+exports.parseMakClassNames = parseMakClassNames;
+exports.removeLocalStorage = removeLocalStorage;
+exports.separateObjectByKey = separateObjectByKey;
+exports.setLocalStorage = setLocalStorage;
+exports.splitKeyAtChar = splitKeyAtChar;
+exports.splitStringAtCapital = splitStringAtCapital;
+exports.twColorHelper = twColorHelper;
 exports.useMakUi = useMakUi;
+exports.withComputedProps = withComputedProps;
 //# sourceMappingURL=index.js.map

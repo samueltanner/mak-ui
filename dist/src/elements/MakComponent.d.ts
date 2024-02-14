@@ -24,11 +24,6 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
 } & {
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
-} & React.SVGProps<SVGFilterElement>, "ref"> | Omit<import("../types/index").TypeProps & {
-    motion?: import("framer-motion").MotionProps | undefined;
-} & {
-    component: keyof JSX.IntrinsicElements;
-    children?: ReactNode;
 } & React.SVGProps<SVGElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
@@ -184,6 +179,11 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
 } & {
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
+} & React.SVGProps<SVGFilterElement>, "ref"> | Omit<import("../types/index").TypeProps & {
+    motion?: import("framer-motion").MotionProps | undefined;
+} & {
+    component: keyof JSX.IntrinsicElements;
+    children?: ReactNode;
 } & React.SVGProps<SVGForeignObjectElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
@@ -334,11 +334,6 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
 } & {
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
-} & React.ClassAttributes<HTMLMapElement> & React.MapHTMLAttributes<HTMLMapElement>, "ref"> | Omit<import("../types/index").TypeProps & {
-    motion?: import("framer-motion").MotionProps | undefined;
-} & {
-    component: keyof JSX.IntrinsicElements;
-    children?: ReactNode;
 } & React.ClassAttributes<HTMLElement> & React.HTMLAttributes<HTMLElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
@@ -470,6 +465,11 @@ declare const MakComponent: React.MemoExoticComponent<React.ForwardRefExoticComp
     component: keyof JSX.IntrinsicElements;
     children?: ReactNode;
 } & React.ClassAttributes<HTMLLIElement> & React.LiHTMLAttributes<HTMLLIElement>, "ref"> | Omit<import("../types/index").TypeProps & {
+    motion?: import("framer-motion").MotionProps | undefined;
+} & {
+    component: keyof JSX.IntrinsicElements;
+    children?: ReactNode;
+} & React.ClassAttributes<HTMLMapElement> & React.MapHTMLAttributes<HTMLMapElement>, "ref"> | Omit<import("../types/index").TypeProps & {
     motion?: import("framer-motion").MotionProps | undefined;
 } & {
     component: keyof JSX.IntrinsicElements;
