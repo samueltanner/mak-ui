@@ -221,10 +221,7 @@ export type ClassObject =
   | undefined
 
 export type ComponentWrapperResponse = {
-  styleObject: {
-    baseClassObject: ClassObject
-    pseudoClassObject: ClassObject
-  }
+  makCSSObject: ClassObject
   componentTheme: MakUiVerboseThemeVariant
   componentText: MakUiVerboseVariant
   componentColor: MakUiVerboseVariant
