@@ -2889,9 +2889,6 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
     component,
     defaultConfig: componentConfig
   }, responseRest);
-  console.log({
-    allProps
-  });
   const inlineStyles = Object.assign({}, makCSSObject);
   const isMotionObject = motion && !isEmptyObject(motion);
   if (isMotionObject) {

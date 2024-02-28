@@ -55,7 +55,6 @@ const MakComponent = memo(forwardRef((_a, ref) => {
         .join(" ")
         .trim();
     const allProps = Object.assign({ makTwClassName: resolvedCombinedClassName, twClassName: resolvedClassName, makClassName: resolvedMakClassName, component, defaultConfig: componentConfig }, responseRest);
-    console.log({ allProps });
     const inlineStyles = Object.assign({}, makCSSObject);
     const isMotionObject = motion && !isEmptyObject(motion);
     if (isMotionObject) {
