@@ -13,7 +13,7 @@ import React, { forwardRef, useMemo, memo, useEffect } from "react";
 import { useMakUi } from "../context/useMakUi";
 import { componentWrapperLogic } from "../functions/componentWrapperLogic";
 import StyledComponent from "./StyledComponent";
-import { isEmptyObject } from "@/functions/helpers";
+import { isEmptyObject } from "../functions/helpers";
 import StyledMotionComponent from "./StyledMotionComponent";
 import { mergeDefaultConfig } from "../functions/helpers";
 const MakComponent = memo(forwardRef((_a, ref) => {
@@ -33,29 +33,30 @@ const MakComponent = memo(forwardRef((_a, ref) => {
             makUi,
         });
     }, [props, makUi]);
-    const { styleObject, twClassName, makClassName } = response, responseRest = __rest(response, ["styleObject", "twClassName", "makClassName"]);
-    const { baseClassObject = {}, pseudoClassObject = {} } = styleObject;
+    const { makCSSObject, twClassName, makClassName } = response, responseRest = __rest(response, ["makCSSObject", "twClassName", "makClassName"]);
     useEffect(() => {
         if (((resolvedMakClassName === null || resolvedMakClassName === void 0 ? void 0 : resolvedMakClassName.includes("group-")) ||
             (resolvedMakClassName === null || resolvedMakClassName === void 0 ? void 0 : resolvedMakClassName.includes("peer-"))) &&
             styleSheet) {
             const updatedStyleSheet = Object.assign({}, styleSheet);
-            Object.entries(pseudoClassObject).forEach(([key, value]) => {
-                if (!styleSheet[key]) {
+            Object.entries(makCSSObject || {}).forEach(([key, value]) => {
+                if (key.match(/(group)|(peer)/g) && !styleSheet[key]) {
                     updatedStyleSheet[key] = value;
                     setStyleSheet(updatedStyleSheet);
                 }
             });
         }
-    }, [setStyleSheet, pseudoClassObject]);
+    }, [setStyleSheet, makCSSObject]);
     const resolvedCombinedClassName = [
-        resolvedClassName,
-        resolvedMakClassName,
+        resolvedClassName || "",
+        resolvedMakClassName || "",
+        makClassName || "",
     ]
         .join(" ")
         .trim();
     const allProps = Object.assign({ makTwClassName: resolvedCombinedClassName, twClassName: resolvedClassName, makClassName: resolvedMakClassName, component, defaultConfig: componentConfig }, responseRest);
-    const inlineStyles = Object.assign(Object.assign({}, baseClassObject), pseudoClassObject);
+    console.log({ allProps });
+    const inlineStyles = Object.assign({}, makCSSObject);
     const isMotionObject = motion && !isEmptyObject(motion);
     if (isMotionObject) {
         return (<StyledMotionComponent ref={ref} styleObject={inlineStyles} as={component} motionProps={motion} {...allProps}/>);

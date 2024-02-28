@@ -60,13 +60,12 @@ export const componentWrapperLogic = ({ props, makUi, type, }) => {
             ? `${resolvedMakClassName} ${bgClassName}`
             : bgClassName;
     }
-    const { styleObject, twClassName, makClassName: makClassNames, } = parseClassNameToStyleObject({
+    const { makCSSObject, twClassName, makClassName: makClassNames, } = parseClassNameToStyleObject({
         className: resolvedClassName,
         makClassName: resolvedMakClassName,
         activeTheme,
-        currentThemeMode: makUi.theme,
     });
-    const response = Object.assign({ styleObject, componentTheme: themePalette, componentText: textPalette, componentColor: colorPalette, componentBorder: borderPalette, fullComponentTheme: activeTheme, componentThemeMode: activeThemeMode, globalThemeMode: makTheme, globalTheme: makVerboseTheme, globalPalette: makVerbosePalette, twClassName, makClassName: makClassNames, modeVariant: themeMode, hasModeProps,
+    const response = Object.assign({ makCSSObject, componentTheme: themePalette, componentText: textPalette, componentColor: colorPalette, componentBorder: borderPalette, fullComponentTheme: activeTheme, componentThemeMode: activeThemeMode, globalThemeMode: makTheme, globalTheme: makVerboseTheme, globalPalette: makVerbosePalette, twClassName, makClassName: makClassNames, modeVariant: themeMode, hasModeProps,
         hasThemeProps,
         hasColorProps,
         hasTextProps,

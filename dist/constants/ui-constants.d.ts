@@ -1,4 +1,5 @@
 import { HtmlElementKey, MakUiCustomInteractionStateKey, MakUiDefaultColors, MakUiDefaultPalette, MakUiDefaultStateColors, MakUiInteractionStateKey, MakUiPaletteKey, MakUiStateKey, MakUiStateShades, MakUiThemeKey, MakUiThemeShades, MakUiThemeVariantKey, MakUiVariantKey, Shade, TailwindUtilityClass, MakUiComponentConfig, MakUiRootComponentConfig } from "../types/index";
+export declare const twModifierSet: Set<string>;
 export declare const tailwindVariants: TailwindUtilityClass[];
 export declare const htmlElements: HtmlElementKey[];
 export declare const tailwindVariantsSet: Set<TailwindUtilityClass>;
@@ -25,15 +26,10 @@ export declare const defaultButtonConfig: MakUiRootComponentConfig;
 export declare const defaultInputConfig: MakUiRootComponentConfig;
 export declare const defaultComponentConfig: MakUiComponentConfig;
 export declare const mediaQueries: {
-    "2xs": string;
-    xs: string;
-    sm: string;
-    md: string;
-    lg: string;
-    xl: string;
-    "2xl": string;
-    "3xl": string;
-    "4xl": string;
+    [key: string]: string;
+};
+export declare const twToCssKeyMap: {
+    [key: string]: string;
 };
 export declare const tailwindToCssModifierObject: {
     [key: string]: string | ((selector: string) => string) | ((selector: string, altSelector: string) => string) | ((n: string) => string);

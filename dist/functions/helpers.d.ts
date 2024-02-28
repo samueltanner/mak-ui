@@ -1,4 +1,4 @@
-import { GenericObject, MakUiDefaultColors, MakUiDefaultStateColors, MakUiFlexiblePaletteInput, MakUiState, MakUiStateKey, MakUiStateShades, MakUiThemeShades, MakUiThemeShadesInput, MakUiVariantKey, MakUiVerbosePalette, MakUiVerboseShades, MakUiVerboseTheme, NestedObject, MakUiThemeKey, MakUiVerboseThemeVariant, TWColorHelperResponse, ObjectToClassNameObjectProp, ClassObject, MakUiRootComponentConfig } from "../types/index";
+import { GenericObject, MakUiDefaultColors, MakUiDefaultStateColors, MakUiFlexiblePaletteInput, MakUiPaletteKey, MakUiState, MakUiStateKey, MakUiStateShades, MakUiThemeShades, MakUiThemeShadesInput, MakUiVariantKey, MakUiVerbosePalette, MakUiVerboseShades, MakUiVerboseTheme, NestedObject, Shade, MakUiThemeKey, MakUiVerboseThemeVariant, TWColorHelperResponse, ObjectToClassNameObjectProp, ClassObject, MakUiRootComponentConfig } from "../types/index";
 import { useMakUi } from "../context/useMakUi";
 export declare const setLocalStorage: (key: string, value: any) => void;
 export declare const getLocalStorage: (key: string) => string | null | undefined;
@@ -126,34 +126,30 @@ export declare const extractInitialPalette: ({ palette, enabledThemeModes, tailw
     tailwindConfig: any;
 }) => MakUiVerbosePalette;
 export declare const objectToClassName: ({ ...args }: ObjectToClassNameObjectProp) => string;
-export declare const parseClassNameToStyleObject: ({ className, makClassName, activeTheme, currentThemeMode, }: {
+export declare const parseClassNameToStyleObject: ({ className, makClassName, activeTheme, }: {
     className?: string | undefined;
     makClassName?: string | undefined;
     activeTheme: MakUiVerboseTheme;
-    currentThemeMode: MakUiThemeKey;
 }) => {
-    styleObject: {
-        baseClassObject: ClassObject;
-        pseudoClassObject: ClassObject;
-    };
+    makCSSObject: ClassObject;
     twClassName: string | undefined;
     makClassName: string;
 };
-export declare const parseMakClassNames: ({ makClassName, activeTheme, currentThemeMode, }: {
+export declare const extractMakVars: ({ className, activeTheme, }: {
+    className?: string | undefined;
+    activeTheme: MakUiVerboseTheme;
+}) => {
+    paletteVariant: MakUiPaletteKey;
+    mcn: string | undefined;
+    opacity: string | undefined;
+    shade: Shade;
+    color: string;
+    altPaletteVariant: MakUiPaletteKey | undefined;
+};
+export declare const parseMakClassNames: ({ makClassName, activeTheme, }: {
     makClassName?: string | undefined;
     activeTheme: MakUiVerboseTheme;
-    currentThemeMode: MakUiThemeKey;
-}) => {
-    pseudoClassObject?: undefined;
-    baseClassObject?: undefined;
-    unresolved?: undefined;
-} | {
-    pseudoClassObject: {};
-    baseClassObject: {
-        [k: string]: string | GenericObject;
-    };
-    unresolved: string | undefined;
-};
+}) => ClassObject;
 export declare const ensureUtilityClass: (utility: string, className: string) => string;
 export declare const mergeClassNames: (...props: string[]) => string;
 export declare const mergeDefaultConfig: ({ makUi, useConfig, component, className, makClassName, }: {

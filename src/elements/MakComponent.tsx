@@ -3,7 +3,7 @@ import { useMakUi } from "../context/useMakUi"
 import { MakUiElementProps } from "../types/index"
 import { componentWrapperLogic } from "../functions/componentWrapperLogic"
 import StyledComponent from "./StyledComponent"
-import { isEmptyObject } from "@/functions/helpers"
+import { isEmptyObject } from "../functions/helpers"
 import StyledMotionComponent from "./StyledMotionComponent"
 import { mergeDefaultConfig } from "../functions/helpers"
 

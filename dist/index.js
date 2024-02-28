@@ -290,6 +290,7 @@ const twColors = {
   "rose-950": "#4c0519"
 };
 
+const twModifierSet = new Set(["hover", "focus", "focus-within", "focus-visible", "active", "visited", "target", "first", "last", "only", "odd", "even", "first-of-type", "last-of-type", "only-of-type", "empty", "disabled", "enabled", "checked", "indeterminate", "default", "required", "valid", "invalid", "in-range", "out-of-range", "placeholder-shown", "autofill", "read-only", "before", "after", "first-letter", "first-line", "marker", "selection", "file", "backdrop", "placeholder", "fullscreen", "last-child", "link", "not-checked", "only-child", "optional", "read-write", "first-child", "has", "is"]);
 const makUiThemes = ["dark", "light", "custom"];
 const makUiThemesSet = new Set(makUiThemes);
 const makUiPalettes = ["color", "text", "border", "theme"];
@@ -430,6 +431,9 @@ const defaultComponentConfig = {
   input: defaultInputConfig
 };
 const mediaQueries = {
+  dark: '[data-theme="dark"] &',
+  light: '[data-theme="light"] &',
+  custom: '[data-theme="custom"] &',
   "2xs": "@media (min-width: 320px)",
   xs: "@media (min-width: 480px)",
   sm: "@media (min-width: 640px)",
@@ -440,7 +444,18 @@ const mediaQueries = {
   "3xl": "@media (min-width: 1920px)",
   "4xl": "@media (min-width: 2560px)"
 };
-const tailwindToCssModifierObject = Object.assign({
+const twToCssKeyMap = {
+  bg: "backgroundColor",
+  text: "color",
+  border: "borderColor",
+  theme: "backgroundColor",
+  color: "backgroundColor",
+  outline: "outlineColor",
+  ring: "outlineColor",
+  "ring-offset": "boxShadow",
+  divide: "borderColor"
+};
+Object.assign({
   //styles applied directly to element
   //tw eg. hover:bg-red-500
   dark: '[data-theme="dark"] &',
@@ -1634,8 +1649,7 @@ const objectToClassName = _a => {
 const parseClassNameToStyleObject = ({
   className = "",
   makClassName = undefined,
-  activeTheme,
-  currentThemeMode
+  activeTheme
 }) => {
   const makRegex = /mak\((.*?)\)/g;
   const whiteSpaceRegex = /[ \t\r\n]+/;
@@ -1659,186 +1673,331 @@ const parseClassNameToStyleObject = ({
   }
   makClassName = makClassNamesArray.join(" ");
   let twClassName = twClassNamesArray.length ? twClassNamesArray.join(" ") : undefined;
-  const {
-    baseClassObject,
-    pseudoClassObject,
-    unresolved
-  } = parseMakClassNames({
+  const makCSSObject = parseMakClassNames({
     makClassName,
-    activeTheme,
-    currentThemeMode
+    activeTheme
   });
-  const styleObject = {
-    baseClassObject,
-    pseudoClassObject
-  };
   return {
-    styleObject,
+    makCSSObject,
     twClassName,
     makClassName
   };
 };
 const separateTwModifiers = className => {
   if (!className || typeof className !== "string") return {
-    className,
-    modifiersArray: [],
     modifiers: "",
-    media: undefined
+    modifiersArray: [],
+    mediaQueriesArray: [],
+    relationalModifiersArray: [],
+    className
   };
-  // Regex to capture the last segment after the last colon and the rest before it
+  const hasSet = new Set();
+  if (className.includes("has-")) {
+    const hasMatch = className.match(`^${"has-"}\\[(.+?)\\]`);
+    if (hasMatch) {
+      const pseudoClass = `has(${hasMatch[1]})`;
+      hasSet.add(pseudoClass);
+    }
+  }
   const regex = /^(.*?):([^:]+)$/;
   const match = className.match(regex);
-  let media = undefined;
+  const relationalModifiers = ["group-", "peer-", "parent-"];
   if (match) {
     const modifiers = match[1];
     const finalClassName = match[2];
-    // Splitting modifiers on colon, but keeping group-* and peer-* together with their /<identifier>
-    const modifiersSet = new Set(modifiers.split(/(?<!\/\w+):/));
-    for (const mediaQuery of Object.keys(mediaQueries)) {
-      if (modifiersSet.has(mediaQuery)) {
-        media = mediaQuery;
+    const modifiersSet = new Set(modifiers.split(/(?<!\[[^\]]*):/));
+    const mediaQueriesSet = new Set();
+    const relationalModifiersSet = new Set();
+    modifiersSet.forEach(m => {
+      !twModifierSet.has(m) && modifiersSet.delete(m);
+      (mediaQueries === null || mediaQueries === void 0 ? void 0 : mediaQueries[m]) && modifiersSet.delete(m);
+      (mediaQueries === null || mediaQueries === void 0 ? void 0 : mediaQueries[m]) && mediaQueriesSet.add(m);
+      if (relationalModifiers.some(rm => m.includes(rm))) {
+        modifiersSet.delete(m);
+        let relation = findSubstring({
+          string: m,
+          substrings: relationalModifiers
+        });
+        const modifier = m.split(relation || " ")[1];
+        relation = relation === null || relation === void 0 ? void 0 : relation.replace("-", "");
+        const hasMatch = modifier.match(`^${"has-"}\\[(.+?)\\]`);
+        const peerTilde = relation === "peer" ? " ~ " : " ";
+        let parsedModifier = "";
+        if (hasMatch) {
+          parsedModifier = `.${relation}:has(${hasMatch[1]})${peerTilde}`;
+        } else {
+          parsedModifier = `.${relation}:${modifier.replace(/[\[\]\:]/g, "")}${peerTilde}`;
+        }
+        relationalModifiersSet.add(parsedModifier);
       }
-    }
-    const modifiersArray = [...modifiersSet.values()];
+    });
+    const modifiersArray = [...modifiersSet.values(), ...hasSet.values()];
+    const mediaQueriesArray = [...mediaQueriesSet.values()];
+    const relationalModifiersArray = [...relationalModifiersSet.values()];
     return {
       modifiers,
       modifiersArray,
-      media,
+      mediaQueriesArray,
+      relationalModifiersArray,
       className: finalClassName
     };
   } else {
     return {
       modifiers: "",
-      modifiersArray: [],
-      media,
+      modifiersArray: [...hasSet.values()],
+      mediaQueriesArray: [],
+      relationalModifiersArray: [],
       className
     };
   }
 };
-const parseMakClassNames = ({
-  makClassName,
-  activeTheme,
-  currentThemeMode
+const extractMakVars = ({
+  className,
+  activeTheme
 }) => {
   var _a, _b, _c, _d;
-  makClassName = makClassName === null || makClassName === void 0 ? void 0 : makClassName.replace(/\s+/g, " ").trim();
-  if (!makClassName || makClassName === "") return {};
-  const makClassNamesArray = (makClassName === null || makClassName === void 0 ? void 0 : makClassName.split(" ")) || [];
-  const styleMap = new Map();
-  const modifierSet = new Set();
-  const unresolvedClasses = [];
-  if (makClassNamesArray.length > 0) {
-    for (const makClassName of makClassNamesArray) {
-      const {
-        className,
-        modifiers,
-        modifiersArray,
-        media
-      } = separateTwModifiers(makClassName);
-      const classNameObj = {};
-      let key = "backgroundColor";
-      let paletteVariant = undefined;
-      let variant = "primary";
-      let shade = undefined;
-      let mcn;
-      let opacity = undefined;
-      let color;
-      let altPaletteVariant = undefined;
-      const keyMap = {
-        bg: "backgroundColor",
-        text: "color",
-        border: "borderColor",
-        theme: "backgroundColor",
-        color: "backgroundColor",
-        outline: "outlineColor",
-        ring: "outlineColor",
-        "ring-offset": "boxShadow",
-        divide: "borderColor"
-      };
-      mcn = className;
-      opacity = mcn === null || mcn === void 0 ? void 0 : mcn.split("/")[1];
-      mcn = mcn === null || mcn === void 0 ? void 0 : mcn.split("/")[0];
-      variant = ((_a = mcn === null || mcn === void 0 ? void 0 : mcn.split(`${paletteVariant}-`)) === null || _a === void 0 ? void 0 : _a[1]) || "primary";
-      paletteVariant = (mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[0]) || "bg";
-      variant = (mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[1]) || "primary";
-      if (variant.includes("|")) {
-        const splitVariant = variant.split("|");
-        variant = splitVariant[1];
-        altPaletteVariant = splitVariant[0];
-      }
-      let shadeString = mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[2];
-      if (!shadeString) {
-        if (variant === "light") {
-          shadeString = "100";
-        } else if (variant === "dark") {
-          shadeString = "900";
-        } else {
-          shadeString = "500";
-        }
-      }
-      shade = Number(shadeString);
-      let resolvedVariant = altPaletteVariant || paletteVariant;
-      if (resolvedVariant !== "theme") {
-        color = (_c = (_b = activeTheme === null || activeTheme === void 0 ? void 0 : activeTheme[resolvedVariant]) === null || _b === void 0 ? void 0 : _b[variant]) === null || _c === void 0 ? void 0 : _c[shade];
-        if (!color) {
-          let twKey = mcn;
-          twKey = twKey.split("-").slice(1).join("-");
-          if (twKey.charAt(0) === "#") {
-            color = twKey;
-          } else {
-            const twColor = twColors[twKey];
-            color = twColor;
-          }
-        }
-      } else {
-        color = (_d = activeTheme.theme) === null || _d === void 0 ? void 0 : _d[variant];
-      }
-      if (opacity && color) {
-        color = chroma__default["default"](color).alpha(Number(opacity) / 100).css();
-      }
-      if (modifiersArray.length) {
-        let modifierCSSKeysArray = [];
-        const utilityKey = keyMap[paletteVariant];
-        const rootCSS = {
-          [utilityKey]: color
-        };
-        modifiersArray.forEach(modifier => {
-          let modifierKey = tailwindToCssModifierObject === null || tailwindToCssModifierObject === void 0 ? void 0 : tailwindToCssModifierObject[modifier];
-          if (typeof modifierKey === "string") {
-            modifierCSSKeysArray.push(modifierKey);
-          }
-          if (typeof modifierKey === "function") {
-            let modifierAndClassNameString = `.${modifiersArray.join(":")}:${className}`;
-            const escapedClassName = modifierAndClassNameString.replace(/([:\|\[\]{}()+>~!@#$%^&*=/"'`;,\\])/g, "\\$&");
-            const selector = `${escapedClassName}`;
-            const resolvedModifierFn = modifierKey(selector, "");
-            modifierCSSKeysArray.push(resolvedModifierFn);
-          }
-        });
-        ensureNestedObject({
-          parent: classNameObj,
-          keys: modifierCSSKeysArray,
-          value: rootCSS
-        });
-        modifierSet.add(classNameObj);
-      } else if (paletteVariant && color) {
-        key = keyMap[paletteVariant];
-        styleMap.set(key, color);
-      } else {
-        unresolvedClasses.push(makClassName);
-      }
+  let paletteVariant = undefined;
+  let variant = "primary";
+  let shade = undefined;
+  let mcn;
+  let opacity = undefined;
+  let color;
+  let altPaletteVariant = undefined;
+  mcn = className;
+  opacity = mcn === null || mcn === void 0 ? void 0 : mcn.split("/")[1];
+  mcn = mcn === null || mcn === void 0 ? void 0 : mcn.split("/")[0];
+  variant = ((_a = mcn === null || mcn === void 0 ? void 0 : mcn.split(`${paletteVariant}-`)) === null || _a === void 0 ? void 0 : _a[1]) || "primary";
+  paletteVariant = (mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[0]) || "bg";
+  variant = (mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[1]) || "primary";
+  if (variant.includes("|")) {
+    const splitVariant = variant.split("|");
+    variant = splitVariant[1];
+    altPaletteVariant = splitVariant[0];
+  }
+  let shadeString = mcn === null || mcn === void 0 ? void 0 : mcn.split("-")[2];
+  if (!shadeString) {
+    if (variant === "light") {
+      shadeString = "100";
+    } else if (variant === "dark") {
+      shadeString = "900";
+    } else {
+      shadeString = "500";
     }
   }
-  const modifierArray = Array.from(modifierSet);
-  const mergedModifiers = deepMerge(...modifierArray);
-  const pseudoClassObject = mergedModifiers;
-  const baseClassObject = Object.fromEntries(styleMap);
-  const unresolved = unresolvedClasses.length ? unresolvedClasses.join(" ") : undefined;
+  shade = Number(shadeString);
+  let resolvedVariant = altPaletteVariant || paletteVariant;
+  if (resolvedVariant !== "theme") {
+    color = (_c = (_b = activeTheme === null || activeTheme === void 0 ? void 0 : activeTheme[resolvedVariant]) === null || _b === void 0 ? void 0 : _b[variant]) === null || _c === void 0 ? void 0 : _c[shade];
+    if (!color) {
+      let twKey = mcn;
+      twKey = twKey.split("-").slice(1).join("-");
+      if (twKey.charAt(0) === "#") {
+        color = twKey;
+      } else {
+        const twColor = twColors[twKey];
+        color = twColor;
+      }
+    }
+  } else {
+    color = (_d = activeTheme.theme) === null || _d === void 0 ? void 0 : _d[variant];
+  }
+  if (opacity && color) {
+    color = chroma__default["default"](color).alpha(Number(opacity) / 100).css();
+  }
   return {
-    pseudoClassObject,
-    baseClassObject,
-    unresolved
+    paletteVariant,
+    mcn,
+    opacity,
+    shade,
+    color,
+    altPaletteVariant
   };
+};
+const findSubstring = ({
+  string,
+  substrings
+}) => {
+  if (!string) return undefined;
+  for (let substring of substrings) {
+    if (string.includes(substring)) {
+      return substring;
+    }
+  }
+  return undefined;
+};
+const constructCSSClassNameObject = ({
+  makClassName,
+  activeTheme,
+  rootClassObject,
+  returnAllVars
+}) => {
+  let {
+    className,
+    modifiersArray,
+    mediaQueriesArray,
+    relationalModifiersArray
+  } = separateTwModifiers(makClassName);
+  let {
+    paletteVariant,
+    color
+  } = extractMakVars({
+    className,
+    activeTheme
+  });
+  let joinedRelationalModifiers = relationalModifiersArray.length ? relationalModifiersArray.join(" ") : "&";
+  let joinedModifiers = modifiersArray.length ? `:${modifiersArray.join(":")}` : "";
+  const escapedClassName = makClassName.replace(/([:\|\[\]{}()+>~!@#$%^&*=/"'`;,\\])/g, "\\$&");
+  const classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`;
+  const mediaQueryKeys = [];
+  mediaQueriesArray.forEach(mq => {
+    mediaQueryKeys.push(mediaQueries[mq]);
+  });
+  const cssKey = (twToCssKeyMap === null || twToCssKeyMap === void 0 ? void 0 : twToCssKeyMap[paletteVariant]) || "backgroundColor";
+  const classNameObject = {};
+  ensureNestedObject({
+    parent: classNameObject,
+    keys: [...mediaQueryKeys, classNameString, rootClassObject ? undefined : cssKey],
+    value: rootClassObject || color
+  });
+  if (returnAllVars) {
+    return {
+      className,
+      modifiersArray,
+      mediaQueriesArray,
+      relationalModifiersArray,
+      paletteVariant,
+      color,
+      classNameObject
+    };
+  }
+  return classNameObject;
+};
+const parseGradientClassNames = ({
+  makClassName,
+  activeTheme
+}) => {
+  var _a, _b;
+  const gradientModifiers = makClassName.match(/([^ ]+:)?(bg-((linear-)|(conic-)|(radial-))?gradient-?[^ ]*)|(([^ ]+:)?((from)|(to)|(via))-[^ ]+)/g) || [];
+  const linearGradientDirections = {
+    "to-t": "to top",
+    "to-tr": "to top right",
+    "to-r": "to right",
+    "to-br": "to bottom right",
+    "to-b": "to bottom",
+    "to-bl": "to bottom left",
+    "to-l": "to left",
+    "to-tl": "to top left"
+  };
+  const gradientModifierObject = {
+    instructions: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/([^ ]+:)?(bg-((linear-)|(conic-)|(radial-))?gradient-?[^ ]*)/g)) || [],
+    fromPositions: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/([^ ]+:)?((from))-\[?[^\s\]]+((%)|(deg)){1}\]?/g)) || [],
+    fromColors: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/(?<=^|\s)(?![^ ]*bg-gradient-)([^ ]+:)?(?:from)-[a-z0-9-]+(?:\/[0-9]+)?(?=\s|$)/g)) || [],
+    viaPositions: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/([^ ]+:)?via-\[?[^\s\]]+((%)|(deg)){1}\]?/g)) || [],
+    viaColors: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/(?<=^|\s)(?![^ ]*bg-gradient-)([^ ]+:)?(?:via)-[a-z0-9-]+(?:\/[0-9]+)?(?=\s|$)/g)) || [],
+    toPositions: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/([^ ]+:)?to-\[?[^\s\]]+((%)|(deg)){1}\]?/g)) || [],
+    toColors: (makClassName === null || makClassName === void 0 ? void 0 : makClassName.match(/(?<=^|\s)(?![^ ]*bg-gradient-)([^ ]+:)?(?:to)-[a-z0-9-]+(?:\/[0-9]+)?(?=\s|$)/g)) || []
+  };
+  for (const gm of gradientModifiers) {
+    makClassName = makClassName === null || makClassName === void 0 ? void 0 : makClassName.replace(gm, "").trim();
+  }
+  const gradientClassSet = new Set();
+  for (let instruction of gradientModifierObject.instructions) {
+    const gradientType = ((_a = instruction.match(/(linear|conic|radial)/)) === null || _a === void 0 ? void 0 : _a[0]) || "linear";
+    const direction = ((_b = instruction.match(/((to-t)|(to-tr)|(to-r)|(to-br)|(to-b)|(to-bl)|(to-l)|(to-tl))/g)) === null || _b === void 0 ? void 0 : _b[0]) || "to-b";
+    const gradientDirection = gradientType === "linear" ? `${linearGradientDirections === null || linearGradientDirections === void 0 ? void 0 : linearGradientDirections[direction]}, ` : gradientType === "radial, " ? "circle, " : "";
+    const gradientInstruction = `${gradientType}-gradient(${gradientDirection}var(--gradient-stops))`;
+    const instructionClassObject = constructCSSClassNameObject({
+      makClassName: instruction,
+      activeTheme,
+      rootClassObject: {
+        backgroundImage: gradientInstruction
+      }
+    });
+    gradientClassSet.add(instructionClassObject);
+  }
+  const hasViaValues = gradientModifierObject.viaColors.length > 0 || gradientModifierObject.viaPositions.length > 0;
+  for (let terminus of ["from", "via", "to"]) {
+    for (let twPosition of gradientModifierObject[`${terminus}Positions`]) {
+      if (!gradientModifierObject[`${terminus}Positions`].length) continue;
+      const positionLocation = twPosition.replace(/[\[\]]/g, "").replace("to-", "");
+      const positionClassObject = constructCSSClassNameObject({
+        makClassName: twPosition,
+        activeTheme,
+        rootClassObject: {
+          [`--gradient-${terminus}-position`]: positionLocation
+        }
+      });
+      gradientClassSet.add(positionClassObject);
+    }
+  }
+  for (let terminus of ["from", "via", "to"]) {
+    for (let twColor of gradientModifierObject[`${terminus}Colors`]) {
+      let {
+        className
+      } = separateTwModifiers(twColor);
+      className = className === null || className === void 0 ? void 0 : className.replace(terminus, "bg");
+      const {
+        color
+      } = extractMakVars({
+        className,
+        activeTheme
+      });
+      let rootClassObject = {};
+      if (terminus === "from") {
+        rootClassObject = {
+          "--gradient-stops": `var(--gradient-${terminus}),${hasViaValues ? " var(--gradient-via)," : ""} var(--gradient-to)`,
+          "--gradient-from": `${color} var(--gradient-from-position, 0%)`,
+          "--gradient-to": `var(--gradient-to-color, rgb(0,0,0,0)) var(--gradient-to-position, 100%)`
+        };
+        if (hasViaValues) {
+          rootClassObject = Object.assign(Object.assign({}, rootClassObject), {
+            "--gradient-via": `var(--gradient-via-color) var(--gradient-via-position, 50%)`
+          });
+        }
+      } else {
+        rootClassObject = {
+          [`--gradient-${terminus}-color`]: color
+        };
+      }
+      const colorClassObject = constructCSSClassNameObject({
+        makClassName: twColor,
+        activeTheme,
+        rootClassObject
+      });
+      gradientClassSet.add(colorClassObject);
+    }
+  }
+  return {
+    gradientClassSet,
+    makClassName
+  };
+};
+const parseMakClassNames = ({
+  makClassName,
+  activeTheme
+}) => {
+  makClassName = makClassName === null || makClassName === void 0 ? void 0 : makClassName.replace(/\s+/g, " ").trim();
+  if (!makClassName || makClassName === "") return {};
+  const resp = parseGradientClassNames({
+    makClassName,
+    activeTheme
+  });
+  makClassName = resp.makClassName;
+  const gradientClassSet = resp.gradientClassSet;
+  let makClassNamesArray = makClassName === "" ? [] : (makClassName === null || makClassName === void 0 ? void 0 : makClassName.split(" ")) || [];
+  let cssObjectSet = new Set(gradientClassSet);
+  if (makClassNamesArray.length > 0) {
+    for (const makClassName of makClassNamesArray) {
+      const classNameObj = constructCSSClassNameObject({
+        makClassName,
+        activeTheme
+      });
+      cssObjectSet.add(classNameObj);
+    }
+  }
+  const cssObjectArray = Array.from(cssObjectSet);
+  const makCSSObject = deepMerge(...cssObjectArray);
+  return makCSSObject;
 };
 const ensureUtilityClass = (utility, className) => {
   if (!utility) {
@@ -2588,17 +2747,16 @@ const componentWrapperLogic = ({
     resolvedMakClassName = resolvedMakClassName ? `${resolvedMakClassName} ${bgClassName}` : bgClassName;
   }
   const {
-    styleObject,
+    makCSSObject,
     twClassName,
     makClassName: makClassNames
   } = parseClassNameToStyleObject({
     className: resolvedClassName,
     makClassName: resolvedMakClassName,
-    activeTheme,
-    currentThemeMode: makUi.theme
+    activeTheme
   });
   const response = Object.assign({
-    styleObject,
+    makCSSObject,
     componentTheme: themePalette,
     componentText: textPalette,
     componentColor: colorPalette,
@@ -2707,27 +2865,23 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
     });
   }, [props, makUi]);
   const {
-      styleObject,
+      makCSSObject,
       twClassName,
       makClassName
     } = response,
-    responseRest = __rest(response, ["styleObject", "twClassName", "makClassName"]);
-  const {
-    baseClassObject = {},
-    pseudoClassObject = {}
-  } = styleObject;
+    responseRest = __rest(response, ["makCSSObject", "twClassName", "makClassName"]);
   React.useEffect(() => {
     if (((resolvedMakClassName === null || resolvedMakClassName === void 0 ? void 0 : resolvedMakClassName.includes("group-")) || (resolvedMakClassName === null || resolvedMakClassName === void 0 ? void 0 : resolvedMakClassName.includes("peer-"))) && styleSheet) {
       const updatedStyleSheet = Object.assign({}, styleSheet);
-      Object.entries(pseudoClassObject).forEach(([key, value]) => {
-        if (!styleSheet[key]) {
+      Object.entries(makCSSObject || {}).forEach(([key, value]) => {
+        if (key.match(/(group)|(peer)/g) && !styleSheet[key]) {
           updatedStyleSheet[key] = value;
           setStyleSheet(updatedStyleSheet);
         }
       });
     }
-  }, [setStyleSheet, pseudoClassObject]);
-  const resolvedCombinedClassName = [resolvedClassName, resolvedMakClassName].join(" ").trim();
+  }, [setStyleSheet, makCSSObject]);
+  const resolvedCombinedClassName = [resolvedClassName || "", resolvedMakClassName || "", makClassName || ""].join(" ").trim();
   const allProps = Object.assign({
     makTwClassName: resolvedCombinedClassName,
     twClassName: resolvedClassName,
@@ -2735,7 +2889,10 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
     component,
     defaultConfig: componentConfig
   }, responseRest);
-  const inlineStyles = Object.assign(Object.assign({}, baseClassObject), pseudoClassObject);
+  console.log({
+    allProps
+  });
+  const inlineStyles = Object.assign({}, makCSSObject);
   const isMotionObject = motion && !isEmptyObject(motion);
   if (isMotionObject) {
     return /*#__PURE__*/React__default["default"].createElement(StyledMotionComponent, _extends({
@@ -2785,6 +2942,7 @@ exports.detectSystemTheme = detectSystemTheme;
 exports.ensureNestedObject = ensureNestedObject;
 exports.ensureUtilityClass = ensureUtilityClass;
 exports.extractInitialPalette = extractInitialPalette;
+exports.extractMakVars = extractMakVars;
 exports.formatJsonToHtmlString = formatJsonToHtmlString;
 exports.generateDefaultShadesDiffOject = generateDefaultShadesDiffOject;
 exports.generateDefaultStatesObject = generateDefaultStatesObject;
