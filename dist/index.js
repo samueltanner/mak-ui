@@ -452,7 +452,6 @@ const twToCssKeyMap = {
   color: "backgroundColor",
   outline: "outlineColor",
   ring: "outlineColor",
-  "ring-offset": "boxShadow",
   divide: "borderColor"
 };
 Object.assign({
@@ -2456,13 +2455,13 @@ const paletteFactory = ({
       get() {
         return finalVerbosePalette.dark.border;
       }
+    },
+    outline: {
+      get() {
+        return finalVerbosePalette.dark.border;
+      }
     }
     // ring: {
-    //   get() {
-    //     return finalVerbosePalette.dark.border
-    //   },
-    // },
-    // outline: {
     //   get() {
     //     return finalVerbosePalette.dark.border
     //   },
@@ -2478,13 +2477,18 @@ const paletteFactory = ({
       get() {
         return finalVerbosePalette.light.color;
       }
+    },
+    outline: {
+      get() {
+        return finalVerbosePalette.light.border;
+      }
+    },
+    divide: {
+      get() {
+        return finalVerbosePalette.light.border;
+      }
     }
     // ring: {
-    //   get() {
-    //     return finalVerbosePalette.dark.border
-    //   },
-    // },
-    // outline: {
     //   get() {
     //     return finalVerbosePalette.dark.border
     //   },

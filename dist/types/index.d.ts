@@ -226,6 +226,7 @@ export type MakUiVerboseTheme = {
     border: MakUiVerboseVariant;
     theme: MakUiVerboseThemeVariant;
     divide: MakUiVerboseVariant;
+    outline: MakUiVerboseVariant;
 };
 export type MakUiVerboseVariant = {
     [Key in MakUiVariantKey]: MakUiVerboseShades;

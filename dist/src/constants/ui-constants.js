@@ -333,7 +333,6 @@ export const twToCssKeyMap = {
     color: "backgroundColor",
     outline: "outlineColor",
     ring: "outlineColor",
-    "ring-offset": "boxShadow",
     divide: "borderColor",
 };
 export const tailwindToCssModifierObject = Object.assign({ 
