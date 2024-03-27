@@ -226,12 +226,17 @@ export const paletteFactory = ({
         return finalVerbosePalette.dark.color
       },
     },
+    divide: {
+      get() {
+        return finalVerbosePalette.dark.border
+      },
+    },
+    outline: {
+      get() {
+        return finalVerbosePalette.dark.border
+      },
+    },
     // ring: {
-    //   get() {
-    //     return finalVerbosePalette.dark.border
-    //   },
-    // },
-    // outline: {
     //   get() {
     //     return finalVerbosePalette.dark.border
     //   },
@@ -249,12 +254,17 @@ export const paletteFactory = ({
         return finalVerbosePalette.light.color
       },
     },
+    outline: {
+      get() {
+        return finalVerbosePalette.light.border
+      },
+    },
+    divide: {
+      get() {
+        return finalVerbosePalette.light.border
+      }
+    }
     // ring: {
-    //   get() {
-    //     return finalVerbosePalette.dark.border
-    //   },
-    // },
-    // outline: {
     //   get() {
     //     return finalVerbosePalette.dark.border
     //   },

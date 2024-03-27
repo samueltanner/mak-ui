@@ -35,4 +35,4 @@ const handler: ProxyHandler<{}> = {
 
 const mak = new Proxy({}, handler) as Mak
 
-export default mak
+export { mak }

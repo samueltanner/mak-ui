@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import colors from "tailwindcss/colors";
 export type MakUiElementProps = TypeProps & {
     motion?: MotionProps;
+    logComputedClasses?: boolean;
 };
 export type MakUiRootComponentConfig = {
     className?: string;
@@ -207,7 +208,7 @@ export type MakUiPaletteKeySH = "col" | "txt" | "bor" | "thm";
 export type MakUiThemeVariantKeySH = "pri" | "sec" | "ter" | "cst";
 export type MakUiVariantKeySH = MakUiThemeVariantKeySH | "suc" | "err" | "dng" | "war" | "inf";
 export type MakUiThemeKey = "dark" | "light" | "custom";
-export type MakUiPaletteKey = "color" | "text" | "border" | "theme" | "bg";
+export type MakUiPaletteKey = "color" | "text" | "border" | "theme" | "bg" | "divide";
 export type MakUiThemeVariantKey = "primary" | "secondary" | "tertiary" | "custom" | "light" | "dark" | "white" | "black";
 export type MakUiVariantRootKey = "primaryRoot" | "secondaryRoot" | "tertiaryRoot" | "customRoot";
 export type MakUiVariantKey = "primary" | "secondary" | "tertiary" | "custom" | "light" | "dark" | "success" | "error" | "danger" | "warning" | "info";
@@ -224,6 +225,7 @@ export type MakUiVerboseTheme = {
     text: MakUiVerboseVariant;
     border: MakUiVerboseVariant;
     theme: MakUiVerboseThemeVariant;
+    divide: MakUiVerboseVariant;
 };
 export type MakUiVerboseVariant = {
     [Key in MakUiVariantKey]: MakUiVerboseShades;

@@ -170,6 +170,11 @@ export const paletteFactory = ({ paletteInput, enabledThemeModes, defaultShades,
                 return finalVerbosePalette.dark.color;
             },
         },
+        divide: {
+            get() {
+                return finalVerbosePalette.dark.border;
+            },
+        },
         // ring: {
         //   get() {
         //     return finalVerbosePalette.dark.border

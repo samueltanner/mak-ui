@@ -9,7 +9,6 @@ import React, {
 } from "react"
 import { paletteFactory } from "../factories/paletteFactory"
 import { ThemeProvider, useTheme } from "next-themes"
-import { MakUiThemeProvider, useMakUiTheme } from "./useMakUIThemeContext"
 import {
   constructTailwindObject,
   deepMerge,
@@ -18,10 +17,8 @@ import {
 
 import {
   MakUiFlexiblePaletteInput,
-  MakUiInteractionStateKey,
   MakUiSimplePalette,
   MakUiSimpleTheme,
-  MakUiStateShades,
   MakUiThemeKey,
   MakUiThemeShades,
   MakUiVerbosePalette,
@@ -30,7 +27,7 @@ import {
   MakUiComponentConfig,
   MakUiRootComponentConfig,
   GenericObject,
-} from "../types/index"
+} from "../types/index";
 import {
   makUiDefaultThemeShades,
   makUiThemes,

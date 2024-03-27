@@ -1847,7 +1847,10 @@ const constructCSSClassNameObject = ({
   let joinedRelationalModifiers = relationalModifiersArray.length ? relationalModifiersArray.join(" ") : "&";
   let joinedModifiers = modifiersArray.length ? `:${modifiersArray.join(":")}` : "";
   const escapedClassName = makClassName.replace(/([:\|\[\]{}()+>~!@#$%^&*=/"'`;,\\])/g, "\\$&");
-  const classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`;
+  let classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`;
+  if (paletteVariant === "divide") {
+    classNameString = classNameString + " > * + *";
+  }
   const mediaQueryKeys = [];
   mediaQueriesArray.forEach(mq => {
     mediaQueryKeys.push(mediaQueries[mq]);
@@ -2448,6 +2451,11 @@ const paletteFactory = ({
       get() {
         return finalVerbosePalette.dark.color;
       }
+    },
+    divide: {
+      get() {
+        return finalVerbosePalette.dark.border;
+      }
     }
     // ring: {
     //   get() {
@@ -2839,9 +2847,10 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
   var {
       component,
       motion,
-      useConfig
+      useConfig,
+      logComputedClasses
     } = _a,
-    props = __rest(_a, ["component", "motion", "useConfig"]);
+    props = __rest(_a, ["component", "motion", "useConfig", "logComputedClasses"]);
   const makUi = useMakUi();
   const {
     setStyleSheet,
@@ -2890,6 +2899,14 @@ const MakComponent = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef((_a,
     defaultConfig: componentConfig
   }, responseRest);
   const inlineStyles = Object.assign({}, makCSSObject);
+  if (logComputedClasses) {
+    console.log(`MakUi computed props for component: ${component}`, {
+      makTwClassName: resolvedCombinedClassName,
+      twClassName: resolvedClassName,
+      makClassName: resolvedMakClassName,
+      makCSSObject: inlineStyles
+    });
+  }
   const isMotionObject = motion && !isEmptyObject(motion);
   if (isMotionObject) {
     return /*#__PURE__*/React__default["default"].createElement(StyledMotionComponent, _extends({

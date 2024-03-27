@@ -17,7 +17,7 @@ import { isEmptyObject } from "../functions/helpers";
 import StyledMotionComponent from "./StyledMotionComponent";
 import { mergeDefaultConfig } from "../functions/helpers";
 const MakComponent = memo(forwardRef((_a, ref) => {
-    var { component, motion, useConfig } = _a, props = __rest(_a, ["component", "motion", "useConfig"]);
+    var { component, motion, useConfig, logComputedClasses } = _a, props = __rest(_a, ["component", "motion", "useConfig", "logComputedClasses"]);
     const makUi = useMakUi();
     const { setStyleSheet, styleSheet } = makUi;
     let { resolvedClassName, resolvedMakClassName, componentConfig } = mergeDefaultConfig({
@@ -56,6 +56,14 @@ const MakComponent = memo(forwardRef((_a, ref) => {
         .trim();
     const allProps = Object.assign({ makTwClassName: resolvedCombinedClassName, twClassName: resolvedClassName, makClassName: resolvedMakClassName, component, defaultConfig: componentConfig }, responseRest);
     const inlineStyles = Object.assign({}, makCSSObject);
+    if (logComputedClasses) {
+        console.log(`MakUi computed props for component: ${component}`, {
+            makTwClassName: resolvedCombinedClassName,
+            twClassName: resolvedClassName,
+            makClassName: resolvedMakClassName,
+            makCSSObject: inlineStyles,
+        });
+    }
     const isMotionObject = motion && !isEmptyObject(motion);
     if (isMotionObject) {
         return (<StyledMotionComponent ref={ref} styleObject={inlineStyles} as={component} motionProps={motion} {...allProps}/>);

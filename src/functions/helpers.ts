@@ -1479,6 +1479,7 @@ export const extractMakVars = ({
       .alpha(Number(opacity) / 100)
       .css()
   }
+
   return {
     paletteVariant,
     mcn,
@@ -1537,7 +1538,11 @@ const constructCSSClassNameObject = ({
     "\\$&"
   )
 
-  const classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`
+   let classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`
+
+   if (paletteVariant === "divide") {
+     classNameString = classNameString + " > * + *"
+   }
 
   const mediaQueryKeys: string[] = []
 

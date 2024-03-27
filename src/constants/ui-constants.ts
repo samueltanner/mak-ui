@@ -387,7 +387,6 @@ export const twToCssKeyMap: { [key: string]: string } = {
   color: "backgroundColor",
   outline: "outlineColor",
   ring: "outlineColor",
-  "ring-offset": "boxShadow",
   divide: "borderColor",
 }
 

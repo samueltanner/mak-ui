@@ -7,4 +7,4 @@ type Mak = {
     [K in keyof JSX.IntrinsicElements]: ExtendedHTMLElement<K>;
 };
 declare const mak: Mak;
-export default mak;
+export { mak };

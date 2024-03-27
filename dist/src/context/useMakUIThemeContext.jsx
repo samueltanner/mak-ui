@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, } from "react";
-import { setLocalStorage } from "@/functions/helpers";
+import { setLocalStorage } from "../functions/helpers";
 const ThemeContext = createContext(undefined);
 export const MakUiThemeProvider = ({ storageKey = "mak-ui-theme", children, themes, defaultTheme = "light", }) => {
     const [theme, setTheme] = useState(defaultTheme);

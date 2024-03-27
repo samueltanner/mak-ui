@@ -4,6 +4,7 @@ import colors from "tailwindcss/colors"
 
 export type MakUiElementProps = TypeProps & {
   motion?: MotionProps
+  logComputedClasses?: boolean
 }
 
 export type MakUiRootComponentConfig = {
@@ -330,7 +331,7 @@ export type MakUiVariantKeySH =
 
 export type MakUiThemeKey = "dark" | "light" | "custom"
 
-export type MakUiPaletteKey = "color" | "text" | "border" | "theme" | "bg"
+export type MakUiPaletteKey = "color" | "text" | "border" | "theme" | "bg" | "divide"
 
 export type MakUiThemeVariantKey =
   | "primary"
@@ -432,6 +433,8 @@ export type MakUiVerboseTheme = {
   text: MakUiVerboseVariant
   border: MakUiVerboseVariant
   theme: MakUiVerboseThemeVariant
+  divide: MakUiVerboseVariant
+  outline: MakUiVerboseVariant
 }
 
 export type MakUiVerboseVariant = {

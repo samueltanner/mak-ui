@@ -1124,7 +1124,10 @@ const constructCSSClassNameObject = ({ makClassName, activeTheme, rootClassObjec
         ? `:${modifiersArray.join(":")}`
         : "";
     const escapedClassName = makClassName.replace(/([:\|\[\]{}()+>~!@#$%^&*=/"'`;,\\])/g, "\\$&");
-    const classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`;
+    let classNameString = `${joinedRelationalModifiers}.${escapedClassName}${joinedModifiers}`;
+    if (paletteVariant === "divide") {
+        classNameString = classNameString + " > * + *";
+    }
     const mediaQueryKeys = [];
     mediaQueriesArray.forEach((mq) => {
         mediaQueryKeys.push(mediaQueries[mq]);

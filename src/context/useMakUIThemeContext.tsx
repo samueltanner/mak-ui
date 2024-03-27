@@ -6,7 +6,7 @@ import React, {
   ReactNode,
 } from "react"
 import { MakUiThemeKey } from ".."
-import { setLocalStorage } from "@/functions/helpers"
+import { setLocalStorage } from "../functions/helpers"
 
 type ThemeContextType = {
   theme: MakUiThemeKey

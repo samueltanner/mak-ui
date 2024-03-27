@@ -15,7 +15,7 @@ type HTMLMakComponentProps<K extends keyof JSX.IntrinsicElements> =
 
 const MakComponent = memo(
   forwardRef<HTMLElement, HTMLMakComponentProps<keyof JSX.IntrinsicElements>>(
-    ({ component, motion, useConfig, ...props }, ref) => {
+    ({ component, motion, useConfig, logComputedClasses, ...props }, ref) => {
       const makUi = useMakUi()
       const { setStyleSheet, styleSheet } = makUi
 
@@ -76,6 +76,15 @@ const MakComponent = memo(
 
       const inlineStyles = {
         ...makCSSObject,
+      }
+
+      if (logComputedClasses) {
+        console.log(`MakUi computed props for component: ${component}`, {
+          makTwClassName: resolvedCombinedClassName,
+          twClassName: resolvedClassName,
+          makClassName: resolvedMakClassName,
+          makCSSObject: inlineStyles,
+        })
       }
 
       const isMotionObject = motion && !isEmptyObject(motion)

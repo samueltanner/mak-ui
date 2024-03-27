@@ -17,4 +17,4 @@ const handler = {
     },
 };
 const mak = new Proxy({}, handler);
-export default mak;
+export { mak };
